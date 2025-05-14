@@ -1,0 +1,221 @@
+.iziToast-wrapper {
+     gap: 5px;
+}
+
+.iziToast {
+     box-shadow: 0 0 8px 2px #00000012;
+     border-radius: 10px;
+     overflow: hidden;
+     padding: 20px 45px 20px 0;
+}
+
+.iziToast>.iziToast-body {
+     position: unset;
+     padding: unset;
+     height: unset;
+     min-height: unset;
+     margin: unset;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     gap: 20px;
+     padding-left: 20px !important;
+
+}
+
+.iziToast:after {
+     box-shadow: none;
+}
+
+.iziToast>.iziToast-body .iziToast-icon {
+     position: unset;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     font-size: 18px;
+     line-height: 1;
+     margin-top: unset;
+     width: unset;
+     height: unset;
+}
+
+.iziToast .iziToast-icon {
+     border-radius: 10px;
+     padding: 10px;
+}
+
+.iziToast.iziToast-color-green .iziToast-icon {
+     background: #28c76f31;
+}
+
+.iziToast.iziToast-color-red .iziToast-icon {
+     background: #eb222231;
+}
+
+.iziToast.iziToast-color-blue .iziToast-icon {
+     background: #1e9ff231;
+}
+
+.iziToast.iziToast-color-orange .iziToast-icon {
+     background: #ff9f4331;
+}
+
+
+.iziToast>.iziToast-body .iziToast-texts {
+     margin: 0;
+     padding-right: 0;
+     display: flex;
+     flex-direction: column;
+     gap: 5px;
+}
+
+.iziToast>.iziToast-body .iziToast-message {
+     margin: 0;
+}
+
+
+.iziToast>.iziToast-close {
+     font-family: 'Line Awesome Free';
+     font-weight: 900;
+     background: unset;
+}
+
+.iziToast>.iziToast-close::before {
+     content: "\f00d";
+}
+
+.iziToast>.iziToast-progressbar>div {
+     height: 4px;
+}
+
+.iziToast>.iziToast-close{
+     width: 50px;
+}
+
+.top {
+    background: #5DC3EB;
+}
+.social img {
+    width: 24px;
+}
+.phone img {
+    width: 24px;
+}
+.add img {
+    width: 24px;
+}
+
+.cmn-btn {
+    border-radius: 4px;
+    background: linear-gradient(180deg, #5DC3EB 0%, #356F85 100%);
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.cmn-btn-active:focus, .cmn-btn-active:hover, .cmn-btn:focus, .cmn-btn:hover {
+    box-shadow: 0px 10px 9px -8px #ffc107;
+}
+.custom--dropdown {
+    position: relative;
+    width: auto;
+    min-width: 50px;
+    display: none !important;
+}
+.header-section-two .header-bottom-area {
+    padding-top: 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.section1 .container {
+  display: flex;
+  justify-content: space-around;
+}
+.section1 {
+    padding: 50px;
+}
+.section1 .container .items {
+  display: flex;
+  gap: 20px;
+}
+.section1 .container .items img {
+    width: 50px;
+}
+section.banner {
+    display: none;
+}
+
+.header-bottom-area .navbar-collapse .main-menu li a {
+    position: relative;
+    padding: 30px 0 30px 0;
+    color: #000000;
+    font-weight: 500;
+    align-items: center;
+    display: inline-block;
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    transition: all 0.5s;
+}
+ 
+.appoint-content .appoint-form .search-btn {
+    width: 80px;
+    -ms-flex: 0 0 55px;
+    flex: 0 0 80px;
+    height: 48px;
+    border-radius: 4px;
+    padding: 0;
+}
+.section-title {
+    position: relative;
+    font-weight: 600;
+    color: #003367;
+    margin-bottom: 10px;
+    margin-top: -13px;
+    font-size: 36px;
+    text-align: center;
+    text-transform: capitalize;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow:after {
+
+    color: #fff;
+}
+.doc-deg{
+	display:none;
+}
+h6.title {
+    font-size: 20px;
+    font-weight: 600;
+}
+.section-header-left {
+    width: 100%;
+}
+.client-section .section-header p {
+    width: 100%;
+}
+section.faq-section.pd-t-80 {
+    background: #F6F6F6;
+}
+.faq-wrapper .faq-item .faq-title {
+    font-size: 20px;
+    margin-top: -7px;
+    margin-bottom: -7px;
+    align-items: center;
+    cursor: pointer;
+    display: flex
+;
+    flex-wrap: wrap;
+    align-items: center;
+    background: white;
+    border: 1px solid #5dc3eb;
+    border-radius: 10px;
+}
+.footer-section {
+    background-color: #000000;
+    position: relative;
+}
+.privacy-area {
+    position: relative;
+    padding: 20px 0;
+    background-color: #111111;
+}
+@media only screen and (max-width: 1700px) {
+    .header-bottom-area .navbar-collapse .main-menu li {
+        margin-right: 27px;
+    }
+}

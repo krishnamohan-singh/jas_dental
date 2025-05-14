@@ -1,0 +1,156 @@
+@media (max-width: 768px) {
+  
+
+  
+  /* section-2 */
+  .bg-custom{
+    margin: 0px;
+    width: 100%;
+    padding: 20px;
+  }
+  
+
+  .content-box h2 {
+    font-size: 22px;
+  }
+
+  .content-box .para-div {
+    font-size: 14px;
+    line-height: 18px;
+    text-align: justify;
+  }
+
+  
+  /* section3 */
+  .sec-3 {
+    padding-top: 30px;
+    max-width: 1238px;
+    height: auto;
+  /* margin: 28px 102px 100px 100px; */
+    margin: 0;
+    display: flex;
+    width:90%;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+  .what-offr {
+    font-size: 26px;
+    width: 100%;
+  }
+  .what-offr span {
+    color: #0074cc;
+  }
+
+  .box {
+    width: 100%;
+    height: 300px;
+    gap: 14px;
+    border-radius: 8px;
+  }
+
+  .we-offer {
+    gap: 40px;
+    width: 100%;
+    margin-bottom: 40px;
+  }
+  .offer-cont {
+    width: 100%;
+    margin: 0px 14px;
+    gap: 40px;
+  }
+  .uper-div {
+    width: 100%;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .lowr-div {
+    width: 100%;
+    font-size: 14px;
+    line-height: 22px;
+  }
+  /* section-4 */
+  .sect-4 {
+    display: flex;
+    width: 100%;
+    padding: 74px 106px 75px 106px;
+    justify-content: center;
+    align-items: center;
+    background: #f7fdff;
+    box-shadow: 0px 0px 17px 0px rgba(0, 0, 0, 0.25) inset;
+  }
+
+  .section4 {
+    width: 100%;
+    padding: 50px 34px 50px;
+  }
+
+  .title h2 {
+    font-size: 24px;
+  }
+
+  .features {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .features-left,
+  .features-right {
+    gap: 28px;
+  }
+
+  .feature-item {
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .feature-text h3 {
+    font-size: 16px;
+  }
+
+  .feature-text p {
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  /* last section */
+
+  #why-choose-us {
+    padding: 30px 20px 28px 20px;
+  }
+  .last-sec-cont {
+    width: 100%;
+    gap: 20px;
+    padding: 0px;
+    margin: 0px;
+  }
+
+
+  /* Section Title */
+ 
+  .feature-box {
+    padding: 0px 0px 16px 0px;
+  }
+  .feature-box img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+  }
+  .feature-box h3 {
+    font-size: 22px;
+  }
+
+  .feature-box p {
+    font-size: 14px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+  /* Hover Effect */
+  .feature-box:hover {
+    transform: scale(1.05);
+  }
+}
