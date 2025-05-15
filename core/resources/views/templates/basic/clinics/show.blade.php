@@ -11,95 +11,53 @@
             </h1>
         </div>
 
-        <!-- Department Tabs -->
-        @if ($clinic->departments->isNotEmpty())
-            <ul class="nav nav-pills justify-content-center mb-4" id="deptTabs" role="tablist">
-                @foreach($clinic->departments as $index => $department)
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link {{ $index === 0 ? 'active' : '' }}" 
-                                id="tab-{{ $department->id }}" 
-                                data-bs-toggle="pill"
-                                data-bs-target="#content-{{ $department->id }}" 
-                                type="button" 
-                                role="tab" 
-                                aria-controls="content-{{ $department->id }}"
-                                aria-selected="{{ $index === 0 ? 'true' : 'false' }}">
-                            {{ $department->name }}
-                        </button>
-                    </li>
-                @endforeach
-            </ul>
-
-            <!-- Doctors Under Each Department -->
-            <div class="tab-content" id="deptTabsContent">
-                @foreach($clinic->departments as $index => $department)
-                    <div class="tab-pane fade {{ $index === 0 ? 'show active' : '' }}" 
-                         id="content-{{ $department->id }}" 
-                         role="tabpanel" 
-                         aria-labelledby="tab-{{ $department->id }}">
-                        <div class="row justify-content-center mb-30">
-                            @forelse($departmentDoctors as $dept)
-                                @if($dept['department']->id == $department->id)
-                                    @forelse($dept['doctors'] as $doctor)
-                                        <div class="col-lg-3 col-md-6 col-sm-6 mb-30">
-                                            <a href="{{ route('doctors.booking', trim(base64_encode($doctor->id . '-' . time()), '=')) }}">
-                                                <div class="booking-item">
-                                                    <div class="booking-thumb position-relative">
-                                                        <img src="{{ getImage(getFilePath('doctorProfile') . '/' . @$doctor->image, getFileSize('doctorProfile')) }}"
-                                                             alt="{{ __('Doctor Image') }}">
-                                                        @if ($doctor->featured)
-                                                            <span class="fav-btn"><i class="fas fa-medal"></i></span>
-                                                        @endif
-                                                    </div>
-                                                    <div class="booking-content">
-                                                        <h5 class="title">
-                                                            {{ __($doctor->name) }} <i class="fas fa-check-circle text-success"></i>
-                                                        </h5>
-                                                        <ul class="booking-list">
-                                                            <li>
-                                                                <i class="fas fa-street-view"></i>
-                                                                <a href="{{ route('doctors.locations', $doctor->location->id) }}">
-                                                                    {{ __($doctor->location->name) }}
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <i class="fas fa-phone"></i> {{ __($doctor->mobile) }}
-                                                            </li>
-                                                        </ul>
-                                                        <div class="booking-btn">
-                                                            <a href="{{ route('doctors.booking', trim(base64_encode($doctor->id . '-' . time()), '=')) }}"
-                                                               class="cmn-btn w-100 text-center">
-                                                                @lang('Book Now')
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
+        
+            @if ($clinic->doctors->isNotEmpty())
+            <div class="row justify-content-center mb-30">
+                @foreach($clinic->doctors as $doctor)
+                    <div class="col-lg-3 col-md-6 col-sm-6 mb-30">
+                        <a href="{{ route('doctors.booking', trim(base64_encode($doctor->id . '-' . time()), '=')) }}">
+                            <div class="booking-item">
+                                <div class="booking-thumb position-relative">
+                                    <img src="{{ getImage(getFilePath('doctorProfile') . '/' . @$doctor->image, getFileSize('doctorProfile')) }}"
+                                        alt="{{ __('Doctor Image') }}">
+                                    @if ($doctor->featured)
+                                        <span class="fav-btn"><i class="fas fa-medal"></i></span>
+                                    @endif
+                                </div>
+                                <div class="booking-content">
+                                    <h5 class="title">
+                                        {{ __($doctor->name) }} <i class="fas fa-check-circle text-success"></i>
+                                    </h5>
+                                    <ul class="booking-list">
+                                        <li>
+                                            <i class="fas fa-street-view"></i>
+                                            <a href="{{ route('doctors.locations', $doctor->location->id) }}">
+                                                {{ __($doctor->location->name) }}
                                             </a>
-                                        </div>
-                                    @empty
-                                        <div class="col-12">
-                                            <div class="alert alert-info text-center" role="alert">
-                                                @lang('No doctors found in this department.')
-                                            </div>
-                                        </div>
-                                    @endforelse
-                                @endif
-                            @empty
-                                <div class="col-12">
-                                    <div class="alert alert-info text-center" role="alert">
-                                        @lang('No doctors available.')
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-phone"></i> {{ __($doctor->mobile) }}
+                                        </li>
+                                    </ul>
+                                    <div class="booking-btn">
+                                        <a href="{{ route('doctors.booking', trim(base64_encode($doctor->id . '-' . time()), '=')) }}"
+                                        class="cmn-btn w-100 text-center">
+                                            @lang('Book Now')
+                                        </a>
                                     </div>
                                 </div>
-                            @endforelse
-                        </div>
+                            </div>
+                        </a>
                     </div>
                 @endforeach
             </div>
-        @else
-            <div class="alert alert-warning text-center">
-                @lang('No departments found in this clinic.')
-            </div>
-        @endif
+            @else
+                <div class="alert alert-warning text-center">
+                    @lang('No doctors available for this clinic.')
+                </div>
+            @endif
+
 
     </div>
 </section>

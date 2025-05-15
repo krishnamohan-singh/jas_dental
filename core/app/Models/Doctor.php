@@ -69,11 +69,10 @@ class Doctor extends Authenticatable
     }
 
      // A doctor belongs to a clinic
-    public function clinic()
+     public function clinics()
     {
-        return $this->belongsTo(Clinic::class);
+        return $this->belongsToMany(Clinic::class, 'clinic_doctor');
     }
-
 
     public function deposits()
     {
@@ -114,6 +113,8 @@ class Doctor extends Authenticatable
     {
         return $this->hasMany(DeviceToken::class);
     }
+
+   
 
     
     public function statusBadge(): Attribute

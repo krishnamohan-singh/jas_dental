@@ -43,47 +43,19 @@ class ClinicController extends Controller
     {
         $pageTitle = 'Our Doctors';
 
-        $departments = Department::orderBy('id', 'desc')->whereHas('doctors')->get();
+        // Load all doctors for this clinic
+        $clinic->load('doctors.location');
 
-        // dd($clinic->id);
-        // Load departments and related doctors using the JSON pivot structure
-        $clinicDepartments = ClinicDepartmentDoctor::where('clinic_id', $clinic->id)->get();
-
-        $departmentDoctors = [];
-
-
-        foreach ($clinicDepartments as $entry) {
-            $department = Department::find($entry->department_id);
-            if (!$department) continue;
-
-
-            // Decode doctor_ids safely and query doctors
-            // $doctorIds = json_decode($entry->doctor_ids, true) ?? [];
-            $doctorIds = Doctor::where('id', $entry->doctor_id)->get();
-
-
-            // $doctors = !empty($doctorIds) ? Doctor::whereIn('id', $doctorIds)->get() : collect(); // empty collection if no doctors
-            $departmentDoctors[] = [
-                'department' => $department,
-                'doctors'    => $doctorIds
-            ];
-        }
-
-        // dd($departmentDoctors);
-        // dd($departmentDoctors);
-
+        // Static content
         $sections = Page::where('tempname', activeTemplate())
             ->where('slug', 'doctors/all')
             ->firstOrFail();
 
-        // dd($departmentDoctors);
-
         return view('templates.basic.clinics.show', compact(
             'clinic',
             'sections',
-            'pageTitle',
-            'departments',
-            'departmentDoctors'
+            'pageTitle'
         ));
     }
 }
+
