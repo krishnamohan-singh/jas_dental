@@ -71,6 +71,17 @@ function siteFavicon()
     return getImage(getFilePath('logoIcon') . '/favicon.png');
 }
 
+function clinicLogo(){
+    return getImage(getFilePath('logoIcon') . '/favicon.png');
+}
+
+function clinic(){
+    return(object)[
+        'path' => 'assets/admin/images/clinic',
+        'size' => '300x300',
+    ];
+}
+
 function loadReCaptcha()
 {
     return Captcha::reCaptcha();

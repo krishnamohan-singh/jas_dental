@@ -136,6 +136,12 @@ Route::middleware('admin')->group(function () {
         Route::post('location/store/{id?}', 'locationStore')->name('location.store');
     });
 
+    Route::controller('ClinicController')->prefix('clinic')->name('clinic.')->group(function(){
+        Route::get('index', 'index')->name('index');
+        Route::post('clinic/store', 'store')->name('store');
+        Route::put('update/{id}', 'update')->name('update');
+    });
+
     Route::controller('AppointmentController')->prefix('appointment')->name('appointment.')->group(function () {
         //Create Appointment
         Route::get('form', 'form')->name('form');

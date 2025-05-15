@@ -62,6 +62,24 @@
         "route_name": "admin.department.location",
         "menu_active": "admin.department.location"
     },
+    "clinics": {
+        "keyword": [
+            "Clinics",
+            "Clinic",
+            "Medical Center",
+            "Dental Clinic",
+            "Health Facility",
+            "Care Center",
+            "Hospital Branch",
+            "Clinic List",
+            "Healthcare",
+            "Outpatient Center"
+        ],
+        "title": "Clinics",
+        "icon": "las la-clinic-medical",
+        "route_name": "admin.clinic.index",
+        "menu_active": "admin.clinic.index"
+    },
     "appointments": {
         "title": "Appointments",
         "icon": "las la-handshake",
@@ -377,87 +395,85 @@
             }
         ]
     },
-
-    
-        "manageStaff": {
-            "title": "Manage Staff",
-            "icon": "las la-users",
-            "menu_active": "admin.staff*",
-            "submenu": [
-                {
-                    "keyword": [
-                        "Add New",
-                        "Staff",
-                        "Staff management",
-                        "New staff",
-                        "Add staff"
-                    ],
-                    "title": "Add New",
-                    "route_name": "admin.staff.form",
-                    "menu_active": "admin.staff.form"
-                },
-                {
-                    "keyword": [
-                        "All Staff",
-                        "Staff",
-                        "Staff management",
-                        "Staff list",
-                        "Staff directory"
-                    ],
-                    "title": "All Staff",
-                    "route_name": "admin.staff.index",
-                    "menu_active": "admin.staff.index"
-                },
-                {
-                    "keyword": [
-                        "Active Staff",
-                        "Staff",
-                        "Staff management",
-                        "Active staff list",
-                        "Active staff"
-                    ],
-                    "title": "Active Staff",
-                    "route_name": "admin.staff.active",
-                    "menu_active": "admin.staff.active"
-                },
-                {
-                    "keyword": [
-                        "Inactive Staff",
-                        "Staff",
-                        "Staff management",
-                        "Inactive staff list",
-                        "Inactive staff"
-                    ],
-                    "title": "Inactive Staff",
-                    "route_name": "admin.staff.inactive",
-                    "menu_active": "admin.staff.inactive"
-                },
-                {
-                    "keyword": [
-                        "Notification to All",
-                        "Staff",
-                        "Staff management",
-                        "Send notification",
-                        "All staff notification"
-                    ],
-                    "title": "Notification to All",
-                    "route_name": "admin.staff.notification.all",
-                    "menu_active": "admin.staff.notification.all"
-                },
-                {
-                    "keyword": [
-                        "Login History",
-                        "Staff",
-                        "Staff management",
-                        "Staff login",
-                        "Login history"
-                    ],
-                    "title": "Login History",
-                    "route_name": "admin.staff.login.history",
-                    "menu_active": "admin.staff.login.history"
-                }
-            ]
-        },
+    "manageStaff": {
+        "title": "Manage Staff",
+        "icon": "las la-users",
+        "menu_active": "admin.staff*",
+        "submenu": [
+            {
+                "keyword": [
+                    "Add New",
+                    "Staff",
+                    "Staff management",
+                    "New staff",
+                    "Add staff"
+                ],
+                "title": "Add New",
+                "route_name": "admin.staff.form",
+                "menu_active": "admin.staff.form"
+            },
+            {
+                "keyword": [
+                    "All Staff",
+                    "Staff",
+                    "Staff management",
+                    "Staff list",
+                    "Staff directory"
+                ],
+                "title": "All Staff",
+                "route_name": "admin.staff.index",
+                "menu_active": "admin.staff.index"
+            },
+            {
+                "keyword": [
+                    "Active Staff",
+                    "Staff",
+                    "Staff management",
+                    "Active staff list",
+                    "Active staff"
+                ],
+                "title": "Active Staff",
+                "route_name": "admin.staff.active",
+                "menu_active": "admin.staff.active"
+            },
+            {
+                "keyword": [
+                    "Inactive Staff",
+                    "Staff",
+                    "Staff management",
+                    "Inactive staff list",
+                    "Inactive staff"
+                ],
+                "title": "Inactive Staff",
+                "route_name": "admin.staff.inactive",
+                "menu_active": "admin.staff.inactive"
+            },
+            {
+                "keyword": [
+                    "Notification to All",
+                    "Staff",
+                    "Staff management",
+                    "Send notification",
+                    "All staff notification"
+                ],
+                "title": "Notification to All",
+                "route_name": "admin.staff.notification.all",
+                "menu_active": "admin.staff.notification.all"
+            },
+            {
+                "keyword": [
+                    "Login History",
+                    "Staff",
+                    "Staff management",
+                    "Staff login",
+                    "Login history"
+                ],
+                "title": "Login History",
+                "route_name": "admin.staff.login.history",
+                "menu_active": "admin.staff.login.history"
+            }
+        ]
+    },
     "support_ticket": {
         "title": "Support Ticket",
         "icon": "la la-ticket",
@@ -620,7 +636,7 @@
             "admin.withdraw.method*",
             "admin.setting.app.purchase"
         ]
-    } ,
+    },
     "report_and_request": {
         "keyword": [
             "Report & Request",
