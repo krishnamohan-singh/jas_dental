@@ -45,6 +45,7 @@ class ClinicController extends Controller
 
         // Load all doctors for this clinic
         $clinic->load('doctors.location');
+        $activeTemplate = 'templates.basic.';
 
         // Static content
         $sections = Page::where('tempname', activeTemplate())

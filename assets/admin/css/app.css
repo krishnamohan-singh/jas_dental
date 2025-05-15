@@ -113,7 +113,7 @@
 }
 
 .nav-tabs-primary .nav-item a.active {
-  border-bottom: 2px solid #4634ff;
+  border-bottom: 2px solid #0f962d;
 }
 
 .hover--effect1 {
@@ -233,7 +233,7 @@ a {
 /* typography css end */
 /* color css start */
 .text--primary {
-  color: #4634ff !important;
+  color: #0f962d !important;
 }
 
 .text--secondary {
@@ -6604,7 +6604,7 @@ th.w-85 {
 }
 
 .cmn-btn {
-  background-color: #3d2bfb;
+  background-color: #0f962d;
   color: #fff;
   height: 50px;
 }

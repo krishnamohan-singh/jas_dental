@@ -31,11 +31,11 @@
 
                     <!-- Clear Filter Button -->
                     @if(request('location'))
-                    <div class="text-center mb-4">
-                        <a href="{{ route('clinics.index') }}" class="btn btn-outline-secondary btn-sm rounded-pill">
-                            @lang('All')
-                        </a>
-                    </div>
+                        <div>
+                            <a href="{{ route('clinics.index') }}" class="btn btn-clear-filter">
+                                @lang('All')
+                            </a>
+                        </div>
                     @endif
                 </div>
             </div>
@@ -43,31 +43,68 @@
 
         <!-- Clinics List -->
         <div class="row g-4">
-            @forelse ($clinics as $clinic)
-                <div class="col-lg-4 col-md-6">
-                    <div class="card h-100 shadow-sm border-1  rounded-4 clinic-card">
-                        <div class="card-body d-flex flex-column">
-                            <span class="badge bg-location mb-2 align-self-start">{{ __($clinic->location->name ?? 'N/A') }}</span>
-                            <h5 class="card-title text-location fw-semibold">
-                                <a href="{{ route('clinics.show', $clinic->id) }}" class="text-decoration-none text-location">
-                                    {{ Str::limit(strip_tags($clinic->name), 50) }}
-                                </a>
-                            </h5>
-                            <p class="card-text flex-grow-1">{{ Str::limit(strip_tags($clinic->description ?? $clinic->name), 100) }}</p>
-                            <a href="{{ route('clinics.show', $clinic->id) }}" class="btn view-btn mt-3 align-self-start">
-                                @lang('View Clinic') <i class="las la-angle-double-right"></i>
-                            </a>
+            <div class="row g-4">
+                @forelse ($clinics as $clinic)
+                    <div class="col-lg-6 col-md-12">
+                        <div class="card shadow-sm clinic-card border-0 rounded-4 h-100 overflow-hidden">
+                            <div class="row g-0 h-100">
+                                <!-- Clinic Image -->
+                                <div class="col-md-4">
+                                    @if ($clinic->photo)
+                                        <img src="{{ getImage(getFilePath('clinic') . '/' . @$clinic->image, getFileSize('clinic')) }}" class="img-fluid h-100 object-fit-cover rounded-start">
+                                    @else
+                                        <img src="{{ asset('assets/images/default-clinic.jpg') }}"
+                                            alt="Default Clinic"
+                                            class="img-fluid h-100 object-fit-cover rounded-start">
+                                    @endif
+                                </div>
+
+                                <!-- Clinic Content -->
+                                <div class="col-md-8 d-flex flex-column p-3">
+                                    <div>
+                                        <h3 class="fw-bold text-location mb-2">{{ $clinic->name }}</h3>
+                                        <p class="text-muted mb-2">{{ $clinic->address }}</p>
+
+                                        @if ($clinic->phone)
+                                            <p class="mb-1">
+                                                <strong>Call:</strong>
+                                                <a href="tel:{{ $clinic->phone }}" class="text-decoration-none text-dark">
+                                                    {{ $clinic->phone }}
+                                                </a>
+                                            </p>
+                                        @endif
+
+                                        @if ($clinic->email)
+                                            <p class="mb-1">
+                                                <strong>Email:</strong>
+                                                <a href="mailto:{{ $clinic->email }}" class="text-decoration-none text-dark">
+                                                    {{ $clinic->email }}
+                                                </a>
+                                            </p>
+                                        @endif
+                                    </div>
+
+                                    <div class="mt-auto pt-3">
+                                        <a href="{{ route('clinics.show', $clinic->id) }}" class="btn btn-book-appointment">
+                                            Book Appointment <i class="las la-arrow-right ms-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            @empty
-                <div class="col-12 text-center">
-                    <div class="alert alert-warning rounded shadow-sm" role="alert">
-                        @lang('No clinics found for the selected location.')
+                @empty
+                    <div class="col-12 text-center">
+                        <div class="alert alert-warning rounded shadow-sm" role="alert">
+                            @lang('No clinics found for the selected location.')
+                        </div>
                     </div>
-                </div>
-            @endforelse
+                @endforelse
         </div>
+
+
+        </div>
+
 
         <!-- Pagination -->
         <div class="mt-5 d-flex justify-content-center">
@@ -88,26 +125,27 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
     .btn-clear-filter {
-    background-color: #356F85;
-    color: #fff;
-    border: 1px solid #356F85;
-    padding: 0.4rem 1rem;
-    border-radius: 50px;
-    font-weight: 500;
-    transition: all 0.3s ease;
+        background-color: #0f962d;
+        color: #fff;
+        border: 1px solid #0f962d;
+        padding: 0.4rem 1.2rem;
+        border-radius: 50px;
+        font-weight: 500;
+        font-size: 14px;
+        transition: all 0.3s ease;
     }
 
     .btn-clear-filter:hover {
-        background-color: #2d5c6f;
-        border-color: #2d5c6f;
+        background-color: #0f962d;
+        border-color: #0f962d;
         color: #fff;
     }
     .text-location {
-        color: #356F85;
+        color: #0f962d;
     }
 
     .bg-location {
-        background-color: #356F85;
+        background-color: #0f962d;
         color: #fff;
         padding: 0.25rem 0.75rem;
         font-size: 0.85rem;
@@ -126,14 +164,14 @@
 
     .view-btn {
         background-color: transparent;
-        color: #356F85;
-        border: 2px solid #356F85;
+        color: #0f962d;
+        border: 2px solid #0f962d;
         border-radius: 50px;
         transition: all 0.3s ease;
     }
 
     .view-btn:hover {
-        background-color: #356F85;
+        background-color: #0f962d;
         color: #fff;
     }
 
@@ -178,6 +216,36 @@
     .select2-selection__arrow {
         top: 10px !important;
     }
+
+
+    .btn-book-appointment {
+        background-color: transparent;
+        color: #0f962d;
+        border: 2px solid #0f962d;
+        border-radius: 50px;
+        padding: 0.4rem 1.2rem;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .btn-book-appointment:hover {
+        background-color: #0f962d;
+        color: #fff;
+    }
+
+    .btn-book-appointment i {
+        transition: transform 0.3s ease;
+    }
+
+    .btn-book-appointment:hover i {
+        transform: translateX(4px);
+    }
+
+
 </style>
 @endpush
 

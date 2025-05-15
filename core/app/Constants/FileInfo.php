@@ -84,6 +84,13 @@ class FileInfo
             'path'      =>'assets/images/department',
             'size'      =>'65x65',
         ];
+
+        $data['clinic'] = [
+            'path'      =>'assets/images/clinic',
+            'size' => '',
+        ];
+
+
         $data['doctorProfile'] = [
             'path'      =>'assets/images/doctor',
             'size'      =>'300x240',

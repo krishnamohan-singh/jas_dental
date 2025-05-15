@@ -72,8 +72,8 @@
                             <ul class="navbar-nav main-menu mx-auto justify-content-center">
                                 <li class="{{ menuActive('home') }}"><a href="{{ route('home') }}">@lang('Home')</a>
                                 </li>
-                                <li class="{{ menuActive(['doctors.all', 'doctors.booking', 'doctors.search']) }}"><a
-                                        href="{{ route('doctors.all') }}">@lang('Our Doctors')</a></li>
+                                <li class="{{ menuActive(['doctors.all']) }}"><a
+                                        href="{{ route('clinics.index') }}">@lang('Our Clinics')</a></li>
 
                                 @php
                                     $pages = App\Models\Page::where('tempname', $activeTemplate)

@@ -93,7 +93,7 @@
 }
 
 .top {
-    background: #5DC3EB;
+    background: #0f962d;
 }
 .social img {
     width: 24px;
@@ -107,7 +107,7 @@
 
 .cmn-btn {
     border-radius: 4px;
-    background: linear-gradient(180deg, #5DC3EB 0%, #356F85 100%);
+    background: linear-gradient(180deg, #46d464 0%, #0f962d 100%);
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
 }
 .cmn-btn-active:focus, .cmn-btn-active:hover, .cmn-btn:focus, .cmn-btn:hover {
