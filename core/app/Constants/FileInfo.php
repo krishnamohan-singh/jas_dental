@@ -88,6 +88,10 @@ class FileInfo
             'path'      =>'assets/images/doctor',
             'size'      =>'300x240',
         ];
+        $data['clinic'] = [
+            'path' => 'assets/images/clinic',
+            'size' => '300x300',
+        ];
         $data['assistantProfile'] = [
             'path'      =>'assets/images/assistant',
             'size'      =>'400x400',
