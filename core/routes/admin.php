@@ -143,7 +143,7 @@ Route::middleware('admin')->group(function () {
     });
 
     Route::controller('AppointmentController')->prefix('appointment')->name('appointment.')->group(function () {
-        //Create Appointment
+        //Create Appointmento
         Route::get('form', 'form')->name('form');
         Route::get('details', 'details')->name('book.details');
         Route::get('booked/date', 'availability')->name('available.date');

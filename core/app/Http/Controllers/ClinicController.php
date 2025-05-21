@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Clinic;
-use App\Models\ClinicDepartmentDoctor;
 use App\Models\Doctor;
 use App\Models\Location;
 use App\Models\Page;
 use App\Models\Department;
+use App\Traits\AppointmentManager;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 
 class ClinicController extends Controller
 {
+    use AppointmentManager;
     // Display a list of clinics with optional location filtering
     public function index(Request $request)
     {
@@ -38,25 +41,58 @@ class ClinicController extends Controller
         return view('templates.basic.clinics.index', compact('clinics', 'locations','sections','pageTitle','departments'));
     }
 
-    // Show clinic details including departments and doctors (via JSON pivot)
-    public function show(Clinic $clinic)
+    public function show(Request $request, $id)
     {
         $pageTitle = 'Our Doctors';
+        $clinic = Clinic::findOrFail($id);
 
-        // Load all doctors for this clinic
-        $clinic->load('doctors.location');
-        $activeTemplate = 'templates.basic.';
+        // Paginate doctors (3 per page)
+        $doctors = $clinic->doctors()->paginate(3);
 
-        // Static content
         $sections = Page::where('tempname', activeTemplate())
             ->where('slug', 'doctors/all')
             ->firstOrFail();
 
+        $availableDate = [];
+        $date = Carbon::now();
+        for ($i = 0; $i < $clinic->serial_day; $i++) {
+            array_push($availableDate, date('Y-m-d', strtotime($date)));
+            $date->addDays(1);
+        }
+
         return view('templates.basic.clinics.show', compact(
             'clinic',
             'sections',
-            'pageTitle'
+            'pageTitle',
+            'availableDate',
+            'doctors' // <-- Pass paginated doctors
         ));
     }
+
+     public function booking($id = 0)
+    {
+        $dId = $id;
+        try{
+            $id = base64_decode($id);
+            if (str_contains($id, '-')) { 
+                $id = explode('-', $id)[0];
+            }
+        }catch(Exception $e){
+            $id = $dId;
+        }
+        $clinic = Clinic::findOrFail($id);
+
+
+        $pageTitle = $clinic->name . ' - Booking';
+        $availableDate = [];
+        $date = Carbon::now();
+        for ($i = 0; $i < $clinic->serial_day; $i++) {
+            array_push($availableDate, date('Y-m-d', strtotime($date)));
+            $date->addDays(1);
+        }
+        return view('Template.basic.clinic.show',  compact('availableDate', 'clinic', 'pageTitle'));
+    }
+
+
 }
 

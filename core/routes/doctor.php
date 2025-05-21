@@ -70,19 +70,21 @@ Route::middleware('doctor')->group(function () {
         Route::post('update', 'update')->name('update');
     });
 
-    //Appointments
+   
+});
+
+ //Appointments
     Route::controller('AppointmentController')->prefix('appointment')->name('appointment.')->group(function () {
-        Route::get('booking', 'details')->name('booking');
+        Route::get('booking', 'details')->name('booking')->middleware('doctor');
         Route::get('booking/availability/date', 'availability')->name('available.date');
         Route::post('store/{id}', 'store')->name('store');
 
         //Appointment
-        Route::get('new', 'new')->name('new');
-        Route::post('dealing/{id}', 'done')->name('dealing');
+        Route::get('new', 'new')->name('new')->middleware('doctor');
+        Route::post('dealing/{id}', 'done')->name('dealing')->middleware('doctor');
 
-        Route::get('service/done', 'doneService')->name('done');
+        Route::get('service/done', 'doneService')->name('done')->middleware('doctor');
 
-        Route::post('remove/{id}', 'remove')->name('remove');
-        Route::get('trashed', 'serviceTrashed')->name('trashed');
+        Route::post('remove/{id}', 'remove')->name('remove')->middleware('doctor');
+        Route::get('trashed', 'serviceTrashed')->name('trashed')->middleware('doctor');
     });
-});

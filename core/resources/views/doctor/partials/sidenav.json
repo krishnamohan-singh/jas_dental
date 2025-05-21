@@ -83,18 +83,7 @@
             }
         ]
     },
-    "doctorSchedules": {
-        "keyword": [
-            "Make Schedules",
-            "Schedules",
-            "Schedules management",
-            "Schedule appointment"
-        ],
-        "title": "Schedules",
-        "icon": "las la-calendar-check",
-        "menu_active": "doctor.schedule.index",
-        "route_name": "doctor.schedule.index"
-    },
+    
     "doctorInfo": {
         "title": "My Info",
         "icon": "las la-info-circle",

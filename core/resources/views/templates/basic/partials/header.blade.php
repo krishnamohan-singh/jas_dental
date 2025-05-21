@@ -26,9 +26,9 @@
     <div class="header">
         <div class="header-bottom-area">
             <div class="container">
-                <div class="header-menu-content">
+                <div class="header-menu-content py-2" >
                     <nav class="navbar navbar-expand-lg p-0">
-                        <a class="site-logo site-title" href="{{ route('home') }}"><img src="{{ siteLogo('dark') }}"
+                        <a class="site-logo site-title" href="{{ route('clinics.index') }}"><img src="{{ siteLogo('dark') }}"
                                 alt="logo"></a>
                         <div class="d-flex gap-2 d-lg-none">
                             @if (gs('multi_language'))
@@ -70,28 +70,9 @@
 
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav main-menu mx-auto justify-content-center">
-                                <li class="{{ menuActive('home') }}"><a href="{{ route('home') }}">@lang('Home')</a>
-                                </li>
-                                <li class="{{ menuActive(['doctors.all']) }}"><a
-                                        href="{{ route('clinics.index') }}">@lang('Our Clinics')</a></li>
-
-                                @php
-                                    $pages = App\Models\Page::where('tempname', $activeTemplate)
-                                        ->where('is_default', 0)
-                                        ->get();
-                                @endphp
-                                @foreach ($pages as $k => $data)
-                                    @php $isActive = route('pages', [$data->slug]) == request()->url(); @endphp
-                                    <li class="@if ($isActive) active @endif"><a
-                                            href="{{ route('pages', [$data->slug]) }}">{{ __($data->name) }}</a></li>
-                                @endforeach
-
-                                <li class="{{ menuActive(['blogs', 'blog.details']) }}"><a
-                                        href="{{ route('blogs') }}">@lang('Blogs')</a>
-                                </li>
-                                <li class="{{ menuActive('contact') }}"><a
-                                        href="{{ route('contact') }}">@lang('Contact')</a>
-                                </li>
+                                
+                                <li class="{{ menuActive(['clinic.all']) }}"><a
+                                        href="{{ route('clinics.index') }}"></a></li>
                             </ul>
                             @if (gs('multi_language'))
                                 @php
@@ -126,7 +107,7 @@
 
                             @endif
                             <div class="header-bottom-action">
-                                <a href="{{ route('doctors.all') }}" class="cmn-btn">@lang('Book an Appoinment')</a>
+                                <a href="{{ route('clinics.index') }}" class="cmn-btn">@lang('Book an Appoinment')</a>
                             </div>
                             <!--<div class="header-bottom-action">
                                 <a href="{{ route('login') }}" class="cmn-btn">@lang('Login')</a>

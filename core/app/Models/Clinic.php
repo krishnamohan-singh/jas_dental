@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Constants\Status;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -13,6 +13,13 @@ class Clinic extends Model
         'name',
         'location_id',
     ];
+
+    protected $casts = [
+        'serial_or_slot'    => 'object',
+        'serial_or_slot1'    => 'object',
+        'serial_or_slot2'    => 'object',
+    ];
+
 
     // Relationships
 
@@ -27,6 +34,26 @@ class Clinic extends Model
     }
     public function doctors()
     {
-        return $this->belongsToMany(Doctor::class, 'clinic_doctor');
+         return $this->belongsToMany(Doctor::class, 'clinic_doctor', 'clinic_id', 'doctor_id')
+        ->withTimestamps();
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+
+
+
+    // SCOPES
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', Status::ACTIVE);
+    }
+    public function scopeInactive($query)
+    {
+        return$query->where('status', Status::INACTIVE);
     }
 }

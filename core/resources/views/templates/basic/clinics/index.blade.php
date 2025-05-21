@@ -51,7 +51,7 @@
                                 <!-- Clinic Image -->
                                 <div class="col-md-4">
                                     @if ($clinic->photo)
-                                        <img src="{{ getImage(getFilePath('clinic') . '/' . @$clinic->image, getFileSize('clinic')) }}" class="img-fluid h-100 object-fit-cover rounded-start">
+                                        <img src="{{ getImage(getFilePath('clinic') . '/' . $clinic->photo, getFileSize('clinic')) }}" class="img-fluid h-100 object-fit-cover rounded-start">
                                     @else
                                         <img src="{{ asset('assets/images/default-clinic.jpg') }}"
                                             alt="Default Clinic"

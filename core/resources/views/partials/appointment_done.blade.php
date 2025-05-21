@@ -79,7 +79,7 @@
                 $('.bookingDate').text(resourse.booking_date);
                 $('.timeSerial').text(resourse.time_serial);
                 $('.age').text(resourse.age);
-                $('.appointment_fees').text(resourse.doctor.fees + ' ' + `{{ gs('cur_text') }}`);
+                $('.appointment_fees').text(resourse.clinic.fees + ' ' + `{{ gs('cur_text') }}`);
                 $('.disease').text(resourse.disease);
 
                 var route = $(this).data('route');

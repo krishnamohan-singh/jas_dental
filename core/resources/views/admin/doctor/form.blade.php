@@ -83,6 +83,20 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group select2-wrapper" id="select2-wrapper-two">
+                                        <label>@lang('Clinic')</label>
+                                        <select class="select2-basic-two form-control" name="clinic" required>
+                                            <option disabled selected>@lang('Select One')</option>
+                                            @foreach ($clinics as $clinic)
+                                            <option @selected($clinic->id == @$doctor->clinic_id) value="{{
+                                                $clinic->id }}">
+                                                {{ __($clinic->name) }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label> @lang('Fees')</label>

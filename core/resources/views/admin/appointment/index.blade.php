@@ -10,7 +10,7 @@
                                 <tr>
                                     <th>@lang('S.N.')</th>
                                     <th>@lang('Patient') | @lang('Mobile')</th>
-                                    <th>@lang('Doctor')</th>
+                                    <th>@lang('Clinic')</th>
                                     <th>@lang('Added By')</th>
                                     @if (request()->routeIs('admin.appointment.trashed'))
                                         <th>@lang('Trashed By')</th>
@@ -31,8 +31,8 @@
                                         <td> <span class="fw-bold d-block"> {{ __($appointment->name) }}</span>
                                             {{ $appointment->mobile }} </td>
                                         <td>
-                                            <a href="{{ route('admin.doctor.detail', $appointment->doctor_id) }}">
-                                                {{ __($appointment->doctor->name) }}
+                                            <a href="{{ route('admin.doctor.detail', $appointment->clinic_id) }}">
+                                                {{ __($appointment->clinic->name) }}
                                             </a>
                                         </td>
                                         <td>

@@ -6,10 +6,10 @@
                 <div class="card-body">
                     <form action="{{ route('admin.appointment.book.details') }}">
                         <div class="form-group ">
-                            <label>@lang('Select Doctor')</label>
-                            <select name="doctor_id" class="select2" required>
+                            <label>@lang('Select Clinics')</label>
+                            <select name="clinic_id" class="select2" required>
                                 <option selected disabled>@lang('Select One')</option>
-                                @foreach ($doctors as $item)
+                                @foreach ($clinics as $item)
                                     <option data-resourse="{{$item}}" value="{{ $item->id }}">{{ __($item->name) }}</option>
                                 @endforeach
                             </select>

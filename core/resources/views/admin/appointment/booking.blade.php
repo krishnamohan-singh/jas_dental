@@ -1,5 +1,4 @@
 @extends('admin.layouts.app')
-
 @section('panel')
     <div class="row mb-none-30">
         <div class="col-xl-3 col-lg-4 mb-30">
@@ -8,7 +7,7 @@
                     <div class="form-group">
 
                         <div class="image-upload-wrapper">
-                            <div class="image-upload-preview" style="background-image: url({{ getImage(getFilePath('doctorProfile') . '/' . $doctor->image, getFileSize('doctorProfile')) }})">
+                            <div class="image-upload-preview" style="background-image: url({{ getImage(getFilePath('clinic') . '/' . $clinic->photo, getFileSize('clinic')) }})">
                             </div>
                         </div>
                     </div>
@@ -17,43 +16,38 @@
 
             <div class="card b-radius--5 overflow-hidden mt-4">
                 <div class="card-body p-0">
-                    <h3 class="p-3">@lang('Doctor Information')</h3>
+                    <h3 class="p-3">@lang('Clinic Information')</h3>
                     <ul class="list-group">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Doctor')
-                            <span class="fw-bold">{{ __($doctor->name) }}</span>
+                            @lang('Clinic')
+                            <span class="fw-bold">{{ __($clinic->name) }}</span>
                         </li>
 
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Username')
-                            <a href="{{ route('admin.doctor.detail', $doctor->id) }}"><span
-                                    class="fw-bold">{{ $doctor->username }}</span></a>
+                            <a href="{{ route('admin.doctor.detail', $clinic->id) }}"><span
+                                    class="fw-bold">{{ $clinic->username }}</span></a>
                         </li>
 
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Email')
-                            <span class="fw-bold">{{ $doctor->email }}</span>
+                            <span class="fw-bold">{{ $clinic->email }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Status')
-                            <span class="fw-bold"> @php echo $doctor->statusBadge @endphp</span>
+                            <span class="fw-bold"> @php echo $clinic->statusBadge @endphp</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Feature')
-                            <span class="fw-bold"> @php echo $doctor->featureBadge @endphp</span>
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Department')
-                            <span class="fw-bold"> {{ __($doctor->department->name) }}</span>
+                            <span class="fw-bold"> @php echo $clinic->featureBadge @endphp</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Location')
-                            <span class="fw-bold"> {{ __($doctor->location->name) }}</span>
+                            <span class="fw-bold"> {{ __($clinic->location->name) }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Fees')
-                            <span class="fw-bold"> {{ __($doctor->fees) }} </span>
+                            <span class="fw-bold"> {{ __($clinic->fees) }} </span>
                         </li>
                     </ul>
                 </div>
@@ -61,7 +55,7 @@
         </div>
 
         <div class="col-xl-9 col-lg-8 mb-30">
-            <form action="{{ route('admin.appointment.store', $doctor->id) }}" method="post">
+            <form action="{{ route('admin.appointment.store', $clinic->id) }}" method="post">
                 @csrf
                 <div class="card b-radius--10 overflow-hidden box--shadow1">
                     <div class="card-body p-0">
@@ -72,11 +66,11 @@
                                     <i class="far fa-clock"></i>
                                 </div>
                                 <div class="widget-two__content">
-                                    @if (($doctor->start_time == null || $doctor->end_time == null) && $doctor->max_serial)
+                                    @if (($clinic->start_time == null || $clinic->end_time == null) && $clinic->max_serial)
                                         <h3>{{ $doctor->max_serial }}</h3>
                                         <p>@lang('Limit of Serial')</p>
-                                    @elseif($doctor->start_time && $doctor->end_time)
-                                        <h3>{{ $doctor->start_time }} - {{ $doctor->end_time }}</h3>
+                                    @elseif($clinic->start_time && $clinic->end_time2)
+                                        <h3>{{ $clinic->start_time }} - {{ $clinic->end_time2 }}</h3>
                                         <p>@lang('Limit Of Time')</p>
                                     @endif
                                 </div>
@@ -94,8 +88,27 @@
                             <h3 class="py-2">@lang('Available Schedule')</h3>
                             <hr>
                             <div class="time-serial-parent mt-3">
-                                @foreach ($doctor->serial_or_slot as $item)
-                                    <button type="button" class="btn btn--primary mr-2 mb-2 available-time item-{{ slug($item) }}"
+                                <h3 class="py-2">@lang('Morning Shift')</h3>
+                                @foreach ($clinic->serial_or_slot as $item)
+                                    <button type="button" class="btn btn-primary mr-2 mb-2 available-time item-{{ slug($item) }}"
+                                        data-value="{{ $item }}">{{ __($item) }}
+                                    </button>
+                                @endforeach
+                            </div>
+                            <input type="hidden" name="time_serial" required>
+                            <div class="time-serial-parent mt-3">
+                                <h3 class="py-2">@lang('Afternoon Shift')</h3>
+                                @foreach ($clinic->serial_or_slot1 as $item)
+                                    <button type="button" class="btn btn-primary mr-2 mb-2 available-time item-{{ slug($item) }}"
+                                        data-value="{{ $item }}">{{ __($item) }}
+                                    </button>
+                                @endforeach
+                            </div>
+                            <input type="hidden" name="time_serial" required>
+                            <div class="time-serial-parent mt-3">
+                                <h3 class="py-2">@lang('Evening Shift')</h3>
+                                @foreach ($clinic->serial_or_slot2 as $item)
+                                    <button type="button" class="btn btn-primary mr-2 mb-2 available-time item-{{ slug($item) }}"
                                         data-value="{{ $item }}">{{ __($item) }}
                                     </button>
                                 @endforeach
@@ -164,6 +177,19 @@
     </div>
 @endsection
 
+
+@push('style')
+
+<style>
+    a.timeslotdisabled {
+        background-color: #e7e7e7 !important;
+        color: white !important;
+        cursor: not-allowed;
+    }
+</style>
+
+@endpush
+
 @push('script')
     <script>
         (function($) {
@@ -188,7 +214,7 @@
                 let url = "{{ route('admin.appointment.available.date') }}";
                 let data = {
                     date: $(this).val(),
-                    doctor_id: '{{ $doctor->id }}'
+                    clinic_id: '{{ $clinic->id }}'
                 }
 
                 $.get(url, data, function(response) {

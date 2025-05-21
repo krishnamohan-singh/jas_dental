@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Constants\Status;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\Clinic;
+use App\Models\ClinicDoctor;
 use App\Models\Deposit;
 use App\Models\Doctor;
 use App\Models\Location;
@@ -60,7 +62,8 @@ class ManageDoctorsController extends Controller
         $pageTitle   = 'Add New Doctor';
         $departments = Department::orderBy('name')->get();
         $locations   = Location::orderBy('name')->get();
-        return view('admin.doctor.form', compact('pageTitle', 'departments', 'locations'));
+        $clinics = Clinic::orderBy('name')->get();
+        return view('admin.doctor.form', compact('pageTitle', 'departments', 'locations', 'clinics'));
     }
 
     public function store(Request $request, $id = 0)
@@ -106,6 +109,7 @@ class ManageDoctorsController extends Controller
             // 'mobile'        => 'required|numeric|unique:doctors,mobile,' . $id,
             'department'    => 'required||numeric|gt:0',
             'location'      => 'required||numeric|gt:0',
+            'clinic'        => 'numeric|gt:0',
             // 'fees'          => 'required|numeric|gt:0',
             // 'qualification' => 'required|string|max:255',
             // 'address'       => 'required|string|max:255',
@@ -134,21 +138,22 @@ class ManageDoctorsController extends Controller
 
         $doctor->name               = $request->name;
         $doctor->username           = $request->username;
-        // if(!empty($doctor->email))
-            $doctor->email              = strtolower(trim($request->email));
-        // else
-        //     $doctor->email              = "";
+        $doctor->email              = strtolower(trim($request->email));
         if (!$doctor->id) {
             $doctor->password       = Hash::make($password);
         }
         $doctor->mobile             = $mobile;
         $doctor->department_id      = $request->department;
         $doctor->location_id        = $request->location;
+        $doctor->clinic_id          = $request->clinic;
         $doctor->qualification      = empty($request->qualification) ? "" : $request->qualification;
         $doctor->fees               = empty($request->fees) ? 0 : $request->fees;
         $doctor->address            = empty($request->address) ? "" : $request->address;
         $doctor->about              = empty($request->about) ? "" : $request->about;
         $doctor->save();
+
+
+        $doctor->clinics()->syncWithoutDetaching([$request->clinic]);
     }
 
     public function detail($id)
@@ -157,13 +162,14 @@ class ManageDoctorsController extends Controller
         $pageTitle         = 'Doctor Detail - ' . $doctor->name;
         $departments       = Department::latest()->get();
         $locations         = Location::latest()->get();
+        $clinics           = Clinic::latest()->get();
         $totalOnlineEarn   = Deposit::where('doctor_id', $doctor->id)->where('status', Status::PAYMENT_SUCCESS)->sum('amount');
         $totalCashEarn     = $doctor->balance - $totalOnlineEarn;
         $totalAppointments = Appointment::where('doctor_id', $doctor->id)->where('try', 1)->count();
 
         $completeAppointments = Appointment::where('doctor_id', $doctor->id)->where('try', 1)->where('is_complete', Status::YES)->count();
         $trashedAppointments  = Appointment::where('doctor_id', $doctor->id)->where('is_delete', Status::YES)->count();
-        return view('admin.doctor.details', compact('pageTitle', 'doctor', 'departments', 'locations', 'totalOnlineEarn', 'totalCashEarn', 'completeAppointments', 'trashedAppointments', 'totalAppointments'));
+        return view('admin.doctor.details', compact('pageTitle', 'doctor', 'departments', 'locations','clinics','totalOnlineEarn', 'totalCashEarn', 'completeAppointments', 'trashedAppointments', 'totalAppointments'));
     }
 
 

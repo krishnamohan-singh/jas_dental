@@ -2,26 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class ClinicDepartmentDoctor extends Model
+class ClinicDoctor extends Pivot
 {
-    protected $table = 'clinic_department_doctor';
+    protected $table = 'clinic_doctor';
 
     protected $fillable = [
         'clinic_id',
-        'department_id',
         'doctor_id',
     ];
 
     public function clinic()
     {
         return $this->belongsTo(Clinic::class);
-    }
-
-    public function department()
-    {
-        return $this->belongsTo(Department::class);
     }
 
     public function doctor()

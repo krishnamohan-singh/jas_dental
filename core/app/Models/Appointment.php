@@ -19,16 +19,29 @@ class Appointment extends Model
         return $this->belongsTo(Doctor::class);
     }
 
+     public function clinic()
+    {
+
+        return $this->belongsTo(Clinic::class);
+    }
+
     public function staff()
     {
 
         return $this->belongsTo(Staff::class, 'added_staff_id');
     }
 
+    public function admin()
+    {
+
+        return $this->belongsTo(Admin::class, 'added_admin_id');
+    }
+
     public function assistant()
     {
         return $this->belongsTo(Assistant::class, 'added_assistant_id');
     }
+
 
     public function deletedByStaff()
     {
@@ -63,6 +76,13 @@ class Appointment extends Model
     public function scopeHasDoctor($query)
     {
         return $query->whereHas('doctor', function ($query) {
+            $query->where('status', Status::ACTIVE);
+        });
+    }
+
+    public function scopeHasClinic($query)
+    {
+        return $query->whereHas('clinic', function ($query) {
             $query->where('status', Status::ACTIVE);
         });
     }

@@ -225,4 +225,38 @@
     })(jQuery);
 
 </script>
+<script>
+    (function ($) {
+        'use strict';
+
+        $('select[name=slot_type]').on('change', function () {
+            var type = $(this).val();
+            schedule(type);
+        })
+
+        var type = $('select[name=slot_type]').val();
+        if (type) {
+            schedule(type);
+        }
+
+        function schedule(type) {
+            if (type == 1) {
+                $('.duration').addClass('d-none');
+                $('.serial').removeClass('d-none');
+                $('.start').addClass('d-none');
+                $('.end').addClass('d-none');
+            } else {
+                $('.start').removeClass('d-none');
+                $('.end').removeClass('d-none');
+                $('.serial').addClass('d-none');
+                $('.duration').removeClass('d-none')
+            }
+        }
+
+
+   
+
+    })(jQuery);
+
+</script>
 @endpush

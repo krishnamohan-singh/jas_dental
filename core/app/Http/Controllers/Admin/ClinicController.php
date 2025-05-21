@@ -7,6 +7,7 @@ use App\Lib\FileManager;
 use App\Models\Clinic;
 use App\Models\Location;
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -26,7 +27,7 @@ class ClinicController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email',
-            'phone' => 'required|string|max:13',
+            'phone' => 'required|string|max:50',
             'address' => 'nullable|string',
             'location_id' => 'required|exists:locations,id',
             'image' => 'nullable|image|mimes:jpg,jpeg,png',
@@ -63,7 +64,7 @@ class ClinicController extends Controller
         $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email',
-        'phone' => 'nullable|string|max:13',
+        'phone' => 'nullable|string|max:50',
         'address' => 'nullable|string',
         'location_id' => 'required|exists:locations,id',
         'image' => 'nullable|image|mimes:jpg,jpeg,png',
@@ -96,6 +97,89 @@ class ClinicController extends Controller
         $clinic->address = $request->address;
         $clinic->location_id = $request->location_id;
         $clinic->map_location = $request->map_location;
+
+        // $clinic->slot_type = $request->slot_type;
+
+        // $clinic->serial_or_slot = $request-> serial_or_slot;
+        // $clinic->start_time = $request->start_time;
+        // $clinic->end_time = $request->end_time;
+        // $clinic->start_time1 = $request->start_time1;
+        // $clinic->end_time1 = $request->end_time1;
+        // $clinic->start_time2 = $request->start_time2;
+        // $clinic->end_time2 = $request->end_time2;
+        // $clinic->serial_or_slot1 = $request->serial_or_slot1;
+        // $clinic->serial_or_slot2 = $request->serial_or_slot2;
+        // $clinic->serial_day = $request->serial_day;
+        // $clinic->max_serial = $request->max_serial;
+        // $clinic->duration = $request->duration;
+        $clinic->fees = $request->fees;
+
+         if ($request->slot_type == 1 && $request->max_serial > 0) {
+            ///Morning Sessions
+            $serialOrSlot = [];
+            for ($i = 1; $i <= $request->max_serial; $i++) {
+                array_push($serialOrSlot, "$i");
+            }
+            $clinic->serial_or_slot = $serialOrSlot;
+            $clinic->max_serial = $request->max_serial;
+ 
+        } elseif ($request->slot_type == 2 && $request->duration > 0) {
+            ///Morning Sessions
+            $startTime    = Carbon::parse($request->start_time);
+            $endTime      = Carbon::parse($request->end_time);
+            $totalMinutes = $startTime->diffInMinutes($endTime);
+            $totalSlot   = $totalMinutes / $request->duration;
+
+            $serialOrSlot = [];
+            for ($i = 1; $i <= $totalSlot; $i++) {
+                array_push($serialOrSlot, date('h:i:a', strtotime($startTime)));
+                $startTime->addMinutes((int)$request->duration);
+            }
+            $clinic->serial_or_slot = $serialOrSlot;
+            $clinic->duration       = $request->duration;
+            $clinic->start_time     = ($request->start_time) ? Carbon::parse($request->start_time)->format('h:i a') : null;
+            $clinic->end_time       = ($request->end_time) ? Carbon::parse($request->end_time)->format('h:i a') : null;
+
+            ///AfterNoon Sessions
+            $startTime    = Carbon::parse($request->start_time1);
+            $endTime      = Carbon::parse($request->end_time1);
+            $totalMinutes = $startTime->diffInMinutes($endTime);
+            $totalSlot   = $totalMinutes / $request->duration;
+
+            $serialOrSlot = [];
+            for ($i = 1; $i <= $totalSlot; $i++) {
+                array_push($serialOrSlot, date('h:i:a', strtotime($startTime)));
+                $startTime->addMinutes((int)$request->duration);
+            }
+            $clinic->serial_or_slot1 = $serialOrSlot;
+            $clinic->duration       = $request->duration;
+            $clinic->start_time1     = ($request->start_time1) ? Carbon::parse($request->start_time1)->format('h:i a') : null;
+            $clinic->end_time1      = ($request->end_time1) ? Carbon::parse($request->end_time1)->format('h:i a') : null;
+
+            ///Evening Sessions
+            $startTime    = Carbon::parse($request->start_time2);
+            $endTime      = Carbon::parse($request->end_time2);
+            $totalMinutes = $startTime->diffInMinutes($endTime);
+            $totalSlot   = $totalMinutes / $request->duration;
+
+            $serialOrSlot = [];
+            for ($i = 1; $i <= $totalSlot; $i++) {
+                array_push($serialOrSlot, date('h:i:a', strtotime($startTime)));
+                $startTime->addMinutes((int)$request->duration);
+            }
+            $clinic->serial_or_slot2 = $serialOrSlot;
+            $clinic->duration       = $request->duration;
+            $clinic->start_time2     = ($request->start_time2) ? Carbon::parse($request->start_time2)->format('h:i a') : null;
+            $clinic->end_time2      = ($request->end_time2) ? Carbon::parse($request->end_time2)->format('h:i a') : null;
+
+        } else {
+            $notify[] = ['error', 'Select the maximum serial or duration'];
+            return back()->withNotify($notify);
+        }
+
+        $clinic->slot_type  = $request->slot_type;
+        $clinic->serial_day = $request->serial_day;
+        
         $clinic->save();
 
         $notify[] = ['success', 'Clinic updated successfully'];

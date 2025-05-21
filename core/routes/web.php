@@ -5,9 +5,10 @@ use App\Http\Controllers\ClinicController;
 
 // Route to display all clinics (with optional location filter)
 Route::get('/clinics', [ClinicController::class, 'index'])->name('clinics.index');
+// Route::get('/', [ClinicController::class, 'index'])->name('clinics.index');
 
 // Route for displaying a single clinic's details
-Route::get('clinics/{clinic}', [ClinicController::class, 'show'])->name('clinics.show');
+Route::get('clinics/{id}', [ClinicController::class, 'show'])->name('clinics.show');
 
 
 

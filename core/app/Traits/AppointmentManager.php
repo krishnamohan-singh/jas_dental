@@ -6,12 +6,14 @@ use App\Constants\Status;
 use App\Models\Appointment;
 use App\Models\AssistantDoctorTrack;
 use App\Models\Doctor;
+use App\Models\Clinic;
 use App\Notify\Email;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Exception;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Validator;
 /**
  * All Common functionalities to make an appointment
  */
@@ -23,8 +25,8 @@ trait AppointmentManager
     public function form()
     {
         $pageTitle = 'Make Appointment';
-        $doctors   = Doctor::active()->orderBy('name')->get();
-        return view($this->userType . '.appointment.form', compact('pageTitle', 'doctors'));
+        $clinics   = Clinic::orderBy('name')->get();
+        return view($this->userType . '.appointment.form', compact('pageTitle', 'clinics'));
     }
 
     public function details(Request $request)
@@ -33,34 +35,34 @@ trait AppointmentManager
          * If making appointment via doctor guard then do not check doctor! use else!
          */
         if ($this->userType == 'doctor') {
-            $doctor = Doctor::findOrFail(auth()->guard('doctor')->id());
+            $clinic = Clinic::findOrFail(auth()->guard('clinic')->id());
         } else {
             $request->validate([
-                'doctor_id' => 'required|numeric|gt:0',
+                'clinic_id' => 'required|numeric|gt:0',
             ]);
-            $doctor = Doctor::findOrFail($request->doctor_id);
+            $clinic = Clinic::findOrFail($request->clinic_id);
         }
 
 
-        if (!$doctor->serial_or_slot) {
-            $notify[] = ['error', 'No available schedule for this doctor!'];
+        if (!$clinic->serial_or_slot) {
+            $notify[] = ['error', 'No available schedule for this Clinic!'];
             return back()->withNotify($notify);
         }
 
         $availableDate = [];
         $date          = Carbon::now();
-        for ($i = 0; $i < $doctor->serial_day; $i++) {
+        for ($i = 0; $i < $clinic->serial_day; $i++) {
             array_push($availableDate, date('Y-m-d', strtotime($date)));
             $date->addDays(1);
         }
         $pageTitle = 'Make Appointment';
-        return view($this->userType . '.appointment.booking', compact('doctor', 'pageTitle', 'availableDate'));
+        return view($this->userType . '.appointment.booking', compact('clinic', 'pageTitle', 'availableDate'));
     }
 
     public function availability(Request $request)
     {
 
-        $collection = Appointment::hasDoctor()->where('doctor_id', $request->doctor_id)->where('try', Status::YES)->where('is_delete', Status::NO)->whereDate('booking_date', Carbon::parse($request->date))->get();
+        $collection = Appointment::hasClinic()->where('clinic_id', $request->clinic_id)->where('try', Status::YES)->where('is_delete', Status::NO)->whereDate('booking_date', Carbon::parse($request->date))->get();
 
         $data = collect([]);
         foreach ($collection as  $value) {
@@ -69,32 +71,59 @@ trait AppointmentManager
         return response()->json(["now"=> Carbon::now(), "data"=>@$data]);
     }
 
+   
+
     public function store(Request $request, $id)
-    { 
-        $this->validation($request);
+    {
+       
+        // $this->validation($request);
+       
+       
+        $validator = Validator::make($request->all(), [
+                'name'           => 'required|max:40',
+                'booking_date'   => 'required|date|after_or_equal:today',
+                'time_serial'    => 'required',
+                'email'          => 'required|email',
+                'mobile'         => 'required|max:40',
+                'age'            => 'required|integer|gt:0',
+                'payment_system' => 'nullable|in:1,2',
+            ],
+            [
+                'time_serial.required' => 'You did not select any time or Serial',
+            ]);
+            
 
-        $doctor = Doctor::active()->find($id);
+    if ($validator->fails()) {
+        return redirect('clinics/'.$id)
+            ->withErrors($validator)
+            ->withInput();
+    }
 
-        if (!$doctor) {
-            $notify[] = ['error', 'The doctor isn\'t available for the appointment'];
-            return back()->withNotify($notify);
+        //$doctor = Doctor::active()->find($id);
+        $clinic = Clinic::active()->find($id);
+
+        if (!$clinic) {
+            $notify[] = ['error', 'The clinic isn\'t available for the appointment'];
+            // return back()->withNotify($notify);
+            return redirect('clinics/'.$id)->withNotify($notify);
         }
 
-        if (!($doctor->serial_or_slot || $doctor->serial_or_slot1 || $doctor->serial_or_slot2)) {
-            $notify[] = ['error', 'No available schedule for this doctor'];
+        if (!($clinic->serial_or_slot || $clinic->serial_or_slot1 || $clinic->serial_or_slot2)) {
+            $notify[] = ['error', 'No available schedule for this clinic'];
             return back()->withNotify($notify);
+            //return redirect('clinics/'.$id)->withNotify($notify);
         }
 
-        $timeSerialCheck = $doctor->whereJsonContains('serial_or_slot', $request->time_serial)->exists();
-        $timeSerialCheck1 = $doctor->whereJsonContains('serial_or_slot1', $request->time_serial)->exists();
-        $timeSerialCheck2 = $doctor->whereJsonContains('serial_or_slot2', $request->time_serial)->exists();
+        $timeSerialCheck = $clinic->whereJsonContains('serial_or_slot', $request->time_serial)->exists();
+        $timeSerialCheck1 = $clinic->whereJsonContains('serial_or_slot1', $request->time_serial)->exists();
+        $timeSerialCheck2 = $clinic->whereJsonContains('serial_or_slot2', $request->time_serial)->exists();
 
         if (!($timeSerialCheck || $timeSerialCheck1 || $timeSerialCheck2)) {
             $notify[] = ['error', 'Invalid! Something went wrong'];
             return back()->withNotify($notify);
         }
 
-        $existed = Appointment::where('doctor_id', $doctor->id)->where('booking_date', $request->booking_date)->where('time_serial', $request->time_serial)->where('try', Status::YES)->where('is_delete', Status::NO)->exists();
+        $existed = Appointment::where('clinic_id', $clinic->id)->where('booking_date', $request->booking_date)->where('time_serial', $request->time_serial)->where('try', Status::YES)->where('is_delete', Status::NO)->exists();
 
         if ($existed) {
             $notify[] = ['error', 'This time or serial is already booked. Please try another or time or serial'];
@@ -126,7 +155,8 @@ trait AppointmentManager
         $appointment->email        = $request->email;
         $appointment->mobile       = $mobile;
         $appointment->age          = $request->age;
-        $appointment->doctor_id    = $doctor->id;
+        $appointment->doctor_id    = 0;
+        $appointment->clinic_id    = $clinic->id;
         $appointment->disease      = $request->disease;
         $appointment->try          =  $gateways ? Status::NO : Status::YES;
         $appointment->trx          =  $gateways ?  getTrx() : NULL;
@@ -147,7 +177,7 @@ trait AppointmentManager
             $appointment->try  = Status::NO;
         } else {
             $appointment->try  = Status::YES;
-        }
+        } 
 
         $appointment->save();
 
@@ -159,20 +189,21 @@ trait AppointmentManager
             return redirect()->route('deposit.index', $encryptedAppointmentId);
         }
 
+        //mail send to patient
         notify($this->notifyUser($appointment), 'APPOINTMENT_CONFIRMATION', [
             'booking_date' => $appointment->booking_date,
             'time_serial'  => $appointment->time_serial,
-            'doctor_name'  => $doctor->name,
-            'doctor_address'=>$doctor->address,
-            'doctor_mobile'=>$doctor->mobile,
-            'doctor_location'=>$doctor->location->name,
-            'doctor_fees'  => '' . $doctor->fees . ' ' . $general->cur_text . '',
+            'clinic_name'  => $clinic->name,
+            'clinic_address'=>$clinic->address,
+            'clinic_mobile'=>$clinic->phone,
+            'clinic_location'=>$clinic->location->name,
+            'clinic_fees'  => '' . $clinic->fees . ' ' . $general->cur_text . '',
         ], ['email', 'sms']);
 
 
-        // mail send to doctor
+        //mail send to doctor
         $data = [
-            'doctor_name' => $doctor->name,            
+            'doctor_name' => $clinic->name,            
             'patient_name'    => $appointment->name,
             'patient_email'    => $appointment->email,
             'patient_phone'    => $appointment->mobile,
@@ -186,9 +217,9 @@ trait AppointmentManager
             $email = new Email();
             $email->subject = "New Appointment Received";
             $email->message = $htmlContent;
-            $email->email = $doctor->email;
-            $email->bcc = ["teaminmogic@gmail.com", 'azad@inmogic.co','dentees3@gmail.com'];
-            $email->receiverName = $doctor->name;
+            $email->email = $clinic->email;
+            $email->bcc = ["teaminmogic@gmail.com", 'azad@inmogic.co','krishnamohansingh605@gmail.com'];
+            $email->receiverName = $clinic->name;
             $email->sendSmtpMail();
             // Log::info('Email sent successfully to ');
         } catch (Exception $e) {
@@ -198,6 +229,7 @@ trait AppointmentManager
 
         $notify[] = ['success', 'New Appointment made successfully'];
         return back()->withNotify($notify);
+       
 
 
 
@@ -233,9 +265,9 @@ trait AppointmentManager
                 $notify[] = ['success', 'Appointed service is done successfully'];
                 return back()->withNotify($notify);
             } elseif ($appointment->payment_status != Status::APPOINTMENT_PAID_PAYMENT && $appointment->payment_status == Status::APPOINTMENT_CASH_PAYMENT) {
-                $doctor          = Doctor::findOrFail($appointment->doctor->id);
-                $doctor->balance += $doctor->fees;
-                $doctor->save();
+                // $doctor          = Doctor::findOrFail($appointment->doctor->id);
+                // $doctor->balance += $doctor->fees;
+                //  $doctor->save();
 
                 $appointment->payment_status = Status::APPOINTMENT_PAID_PAYMENT;
                 $appointment->is_complete    = Status::APPOINTMENT_COMPLETE;
@@ -279,7 +311,7 @@ trait AppointmentManager
         notify($this->notifyUser($appointment), 'APPOINTMENT_REJECTION', [
             'booking_date' => $appointment->booking_date,
             'time_serial'  => $appointment->time_serial,
-            'doctor_name'  => $appointment->doctor->name
+            'clinic_name'  => $appointment->clinic->name
         ], ['email', 'sms']);
 
         $notify[] = ['success', 'Appointment service is trashed successfully'];
@@ -293,7 +325,7 @@ trait AppointmentManager
             'username' => $appointment->email,
             'fullname' => $appointment->name,
             'email'    => $appointment->email,
-            'mobileNumber'   => $appointment->mobile,
+            'mobileNumber'  => $appointment->mobile,
         ];
         return $user;
     }
@@ -301,7 +333,7 @@ trait AppointmentManager
     protected function detectUserType($appointments)
     {
         if ($this->userType == 'admin' || $this->userType == 'staff') {
-            $appointments  = $appointments->hasDoctor();
+            $appointments  = $appointments->hasClinic();
         } else {
             $appointments->where('doctor_id', auth()->guard('doctor')->id());
         }
@@ -312,6 +344,7 @@ trait AppointmentManager
 
         $appointments = $appointments->searchable(['name', 'email', 'disease'])->orderBy('id', 'DESC')->paginate(getPaginate());
 
+
         return $appointments;
     }
 
@@ -319,6 +352,7 @@ trait AppointmentManager
     {
         $pageTitle    = 'All New Appointments';
         $appointments = Appointment::newAppointment()->with('staff', 'doctor', 'assistant');
+
         $appointments = $this->detectUserType($appointments);
 
         return view($this->userType . '.appointment.index', compact('pageTitle', 'appointments'));

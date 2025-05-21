@@ -71,7 +71,8 @@ class Doctor extends Authenticatable
      // A doctor belongs to a clinic
      public function clinics()
     {
-        return $this->belongsToMany(Clinic::class, 'clinic_doctor');
+         return $this->belongsToMany(Clinic::class, 'clinic_doctor', 'doctor_id', 'clinic_id')
+        ->withTimestamps();
     }
 
     public function deposits()

@@ -22,11 +22,17 @@
     <!-- main style css link -->
     <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'css/style.css') }}">
     <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'css/custom.css') }}">
+
+
     @stack('style-lib')
     @stack('style')
     <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'css/color.php') }}?color={{ gs('base_color') }}">
 
+  
+
+
 </head>
+
 @php echo loadExtension('google-analytics') @endphp
 
 <body>
