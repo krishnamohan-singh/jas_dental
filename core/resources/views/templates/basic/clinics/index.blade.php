@@ -11,7 +11,7 @@
                     <!-- Static Bengaluru Box -->
                     <div class="flex-grow-1">
                         <div class="form-control location-static">
-                            Bengaluru
+                            Visit Us in Bengalore
                         </div>
                     </div>
 
@@ -33,7 +33,7 @@
                     @if(request('location'))
                         <div>
                             <a href="{{ route('clinics.index') }}" class="btn btn-clear-filter">
-                                @lang('All')
+                                @lang('Clear Search')
                             </a>
                         </div>
                     @endif
@@ -49,21 +49,25 @@
                         <div class="card shadow-sm clinic-card border-0 rounded-4 h-100 overflow-hidden">
                             <div class="row g-0 h-100">
                                 <!-- Clinic Image -->
-                                <div class="col-md-4">
-                                    @if ($clinic->photo)
-                                        <img src="{{ getImage(getFilePath('clinic') . '/' . $clinic->photo, getFileSize('clinic')) }}" class="img-fluid h-100 object-fit-cover rounded-start">
-                                    @else
-                                        <img src="{{ asset('assets/images/default-clinic.jpg') }}"
-                                            alt="Default Clinic"
-                                            class="img-fluid h-100 object-fit-cover rounded-start">
-                                    @endif
-                                </div>
-
+                                   
+                                        <div class="col-md-4">
+                                            @if ($clinic->photo)
+                                                <img src="{{ getImage(getFilePath('clinic') . '/' . $clinic->photo, getFileSize('clinic')) }}" class="img-fluid h-100 object-fit-cover rounded-start">
+                                            @else
+                                                <img src="{{ asset('assets/images/default-clinic.jpg') }}"
+                                                    alt="Default Clinic"
+                                                    class="img-fluid h-100 object-fit-cover rounded-start">
+                                            @endif
+                                        </div>
+                                 
                                 <!-- Clinic Content -->
                                 <div class="col-md-8 d-flex flex-column p-3">
                                     <div>
+                                        <a href="{{ route('clinics.show', $clinic->id) }}">
                                         <h3 class="fw-bold text-location mb-2">{{ $clinic->name }}</h3>
+                                       
                                         <p class="text-muted mb-2">{{ $clinic->address }}</p>
+                                         </a>
 
                                         @if ($clinic->phone)
                                             <p class="mb-1">

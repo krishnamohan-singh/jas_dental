@@ -43,8 +43,9 @@ class ClinicController extends Controller
 
     public function show(Request $request, $id)
     {
-        $pageTitle = 'Our Doctors';
         $clinic = Clinic::findOrFail($id);
+        $pageTitle = $clinic->name;
+        
 
         // Paginate doctors (3 per page)
         $doctors = $clinic->doctors()->paginate(3);

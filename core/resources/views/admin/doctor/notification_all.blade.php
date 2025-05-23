@@ -80,7 +80,7 @@
                                         </div>
                                     @endif
                                     @if (gs('sn'))
-                                        <div class="col-xxl-2 col-xl-3 col-lg-4 col-md-3 col-sm-6">
+                                       <!-- <div class="col-xxl-2 col-xl-3 col-lg-4 col-md-3 col-sm-6">
                                             <div class="notification-via mb-4 @if ($viaName == 'sms') active @endif " data-method="sms">
                                                 <span class="active-badge"> <i class="las la-check"></i> </span>
                                                 <div class="send-via-method">
@@ -88,10 +88,10 @@
                                                     <h5>@lang('Send Via SMS')</h5>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>-->
                                     @endif
                                     @if (gs('pn'))
-                                        <div class="col-xxl-2 col-xl-3 col-lg-4 col-md-3 col-sm-12">
+                                         <!-- <div class="col-xxl-2 col-xl-3 col-lg-4 col-md-3 col-sm-12">
                                             <div class="notification-via mb-4 @if ($viaName == 'push') active @endif" data-method="push">
                                                 <span class="active-badge"> <i class="las la-check"></i> </span>
                                                 <div class="send-via-method">
@@ -99,7 +99,7 @@
                                                     <h5>@lang('Send Via Firebase')</h5>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     @endif
                                 </div>
                             </div>

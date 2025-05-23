@@ -13,6 +13,8 @@
                                     <th>@lang('Added By')</th>
                                     @if (request()->routeIs('doctor.appointment.trashed'))
                                         <th>@lang('Trashed By')</th>
+                                        <th>@lang('Reason')</th>
+                                        
                                     @endif
                                     <th>@lang('Booking Date')</th>
                                     <th>@lang('Time / Serial No')</th>
@@ -33,7 +35,10 @@
                                         </td>
                                         <td> @php  echo $appointment->addedByBadge;  @endphp </td>
                                         @if (request()->routeIs('doctor.appointment.trashed'))
+                                            
                                             <td> @php  echo $appointment->trashBadge;  @endphp </td>
+                                            <th>{{ __($appointment->reason) }}</th>
+                                            
                                         @endif
                                         <td>{{ showDateTime($appointment->booking_date) }}</td>
                                         <td>{{ $appointment->time_serial }}</td>
@@ -54,6 +59,7 @@
                                                         @if (!$appointment->is_delete && !$appointment->payment_status) ''  @else disabled @endif
                                                         data-action="{{ route('doctor.appointment.remove', $appointment->id) }}"
                                                         data-question="@lang('Are you sure to remove this appointment')?">
+                                                        
                                                         <i class="la la-trash"></i>@lang('Trash')
                                                     </button>
                                                 @endif

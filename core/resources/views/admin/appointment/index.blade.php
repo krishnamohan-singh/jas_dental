@@ -14,6 +14,7 @@
                                     <th>@lang('Added By')</th>
                                     @if (request()->routeIs('admin.appointment.trashed'))
                                         <th>@lang('Trashed By')</th>
+                                        <th>@lang('Reason')</th>
                                     @endif
                                     <th>@lang('Booking Date')</th>
                                     <th>@lang('Time / Serial No')</th>
@@ -72,6 +73,7 @@
                                                     <span class="text--small badge badge--info">@lang('Doctor')</span>
                                                 @endif
                                             </td>
+                                            <td>{{ __(@$appointment->reason) }}</td>
                                         @endif
                                         <td>
                                             <span class="fw-bold">{{ showDateTime($appointment->booking_date, 'y-m-d') }}</span>
