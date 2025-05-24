@@ -11,24 +11,39 @@ use App\Models\Subscriber;
 use App\Models\SupportMessage;
 use App\Models\SupportTicket;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\Models\Location;
+// use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Department;
+use App\Models\Clinic;
+use Illuminate\Http\Request;
 
 class SiteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $reference = @$_GET['reference'];
-        if ($reference) {
-            session()->put('reference', $reference);
+        $pageTitle   = 'Our Clincs';
+        $locations   = Location::orderBy('id', 'DESC')->whereHas('doctors')->get();
+        $departments = Department::orderBy('id', 'DESC')->whereHas('doctors')->get();
+        
+        // Initialize the query to fetch clinics
+        $clinicsQuery = Clinic::with('location'); // Include location details for each clinic
+
+        // Apply location filter if specified
+        if ($request->has('location') && !empty($request->location)) {
+            $clinicsQuery->where('location_id', $request->location);
         }
 
-        $pageTitle = 'Home';
-        $sections = Page::where('tempname', activeTemplate())->where('slug', '/')->first();
-        $seoContents = $sections->seo_content;
-        $seoImage = @$seoContents->image ? getImage(getFilePath('seo') . '/' . @$seoContents->image, getFileSize('seo')) : null;
-        return view('Template::home', compact('pageTitle', 'sections', 'seoContents', 'seoImage'));
+        // Fetch the clinics with pagination (12 per page)
+        $clinics = $clinicsQuery->paginate(12);
+
+        // Fetch all locations for the location filter dropdown
+        $locations = Location::all();
+
+        // Return the view with clinics and locations data
+        $sections       = Page::where('tempname', activeTemplate())->where('slug', 'doctors/all')->firstOrFail();
+        return view('templates.basic.clinics.index', compact('clinics', 'locations','sections','pageTitle','departments'));
     }
 
     public function pages($slug)

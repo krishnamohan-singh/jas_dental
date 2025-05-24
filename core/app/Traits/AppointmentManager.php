@@ -161,17 +161,23 @@ trait AppointmentManager
         $appointment->email        = $request->email;
         $appointment->mobile       = $mobile;
         $appointment->age          = $request->age;
-        $appointment->doctor_id    = 0;
+        // $appointment->doctor_id    = 0;
         $appointment->clinic_id    = $clinic->id;
         $appointment->disease      = $request->disease;
         $appointment->try          =  $gateways ? Status::NO : Status::YES;
         $appointment->trx          =  $gateways ?  getTrx() : NULL;
 
+
+        
+
         if ($this->userType == 'admin') {
             $appointment->added_admin_id = 1;
-        } elseif ($this->userType == 'doctor') {
-            $appointment->added_doctor_id = auth()->guard('doctor')->id();
-        } elseif ($this->userType == 'staff') {
+        } 
+        // elseif ($this->userType == 'doctor') {
+        //     $appointment->added_doctor_id = auth()->guard('doctor')->id();
+
+        // }
+         elseif ($this->userType == 'staff') {
             $appointment->added_staff_id = auth()->guard('staff')->id();
         } elseif ($this->userType == 'assistant') {
             $appointment->added_assistant_id = auth()->guard('assistant')->id();
