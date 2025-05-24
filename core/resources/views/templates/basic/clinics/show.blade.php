@@ -357,346 +357,346 @@
 
 @push('style')
 <style>
-/* Date and Time Slot Selectors */
-.scroll-wrapper {
-    display: flex;
-    overflow-x: auto;
-    gap: 12px;
-    padding: 10px 0;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-}
+    /* Date and Time Slot Selectors */
+    .scroll-wrapper {
+        display: flex;
+        overflow-x: auto;
+        gap: 12px;
+        padding: 10px 0;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
 
-.scroll-wrapper::-webkit-scrollbar {
-    height: 6px;
-}
+    .scroll-wrapper::-webkit-scrollbar {
+        height: 6px;
+    }
 
-.scroll-wrapper::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
+    .scroll-wrapper::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
 
-.scroll-wrapper::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 3px;
-}
+    .scroll-wrapper::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+    }
 
-.scroll-wrapper::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
+    .scroll-wrapper::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
 
-.scroll-btn {
-    flex: 0 0 auto;
-    scroll-snap-align: start;
-    padding: 12px 16px;
-    min-width: 80px;
-    border: 2px solid #e9ecef;
-    border-radius: 12px;
-    background-color: #ffffff;
-    color: #495057;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    font-size: 14px;
-}
-
-.scroll-btn:hover {
-    background-color: #f8f9fa;
-    border-color: #dee2e6;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* Date Button Specific Styles */
-.date-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 85px;
-    padding: 10px 12px;
-}
-
-.date-btn .date-day {
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    margin-bottom: 2px;
-    opacity: 0.7;
-}
-
-.date-btn .date-number {
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 1;
-    margin-bottom: 2px;
-}
-
-.date-btn .date-month {
-    font-size: 11px;
-    font-weight: 500;
-    opacity: 0.8;
-}
-
-.date-btn.active {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: white;
-    border-color: #007bff;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-}
-
-.date-btn.active .date-day,
-.date-btn.active .date-month {
-    opacity: 0.9;
-}
-
-/* Time Slot Button Styles */
-.time-slot-btn {
-    min-width: 100px;
-    padding: 10px 16px;
-    font-weight: 500;
-}
-
-.time-slot-btn.selected {
-    background: linear-gradient(135deg, #28a745, #1e7e34);
-    color: white;
-    border-color: #28a745;
-    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-}
-
-.time-slot-btn.timeslotdisabled {
-    background-color: #e9ecef !important;
-    color: #6c757d !important;
-    cursor: not-allowed !important;
-    border-color: #dee2e6 !important;
-}
-
-.time-slot-btn.timeslotdisabled:hover {
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-/* Layout Improvements */
-.date-selector-wrapper {
-    background: #f8f9fa;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 20px;
-}
-
-.time-slot-wrapper {
-    background: #f8f9fa;
-    border-radius: 12px;
-    padding: 15px;
-    margin-top: 10px;
-}
-
-.overview-booking-header {
-    border-bottom: 2px solid #e9ecef;
-    padding-bottom: 20px;
-    margin-bottom: 25px;
-}
-
-.overview-booking-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.overview-booking-list li {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    color: #6c757d;
-    font-weight: 500;
-}
-
-.overview-booking-list li::before {
-    content: '';
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    margin-right: 8px;
-    border-radius: 50%;
-}
-
-.overview-booking-list li.available::before {
-    background-color: #28a745;
-}
-
-.overview-booking-list li.booked::before {
-    background-color: #dc3545;
-}
-
-.overview-booking-list li.selected::before {
-    background-color: #007bff;
-}
-
-.overview-date-area {
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid #dee2e6;
-}
-
-.overview-date-header .title {
-    font-size: 18px;
-    color: #495057;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-/* Form Styling */
-.booking-appoint-form-area {
-    background: #ffffff;
-    border: 2px solid #e9ecef;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-.booking-appoint-form-area .title {
-    font-size: 20px;
-    color: #495057;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #e9ecef;
-    font-weight: 600;
-}
-
-.booking-appoint-form .form-control {
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    padding: 12px 15px;
-    font-size: 14px;
-    transition: border-color 0.3s ease;
-}
-
-.booking-appoint-form .form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-.booking-appoint-form textarea.form-control {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.cmn-btn {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.cmn-btn:hover {
-    background: linear-gradient(135deg, #0056b3, #004085);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-}
-
-.cmn-btn[data-value="1"] {
-    background: linear-gradient(135deg, #28a745, #1e7e34);
-}
-
-.cmn-btn[data-value="1"]:hover {
-    background: linear-gradient(135deg, #1e7e34, #155724);
-    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
     .scroll-btn {
-        min-width: 70px;
-        font-size: 13px;
-        padding: 10px 12px;
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        padding: 12px 16px;
+        min-width: 80px;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        background-color: #ffffff;
+        color: #495057;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        font-size: 14px;
     }
-    
+
+    .scroll-btn:hover {
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Date Button Specific Styles */
     .date-btn {
-        min-width: 75px;
-        padding: 8px 10px;
-    }
-    
-    .date-btn .date-number {
-        font-size: 18px;
-    }
-    
-    .time-slot-btn {
-        min-width: 90px;
-        padding: 8px 12px;
-    }
-    
-    .overview-booking-list {
-        justify-content: center;
-        gap: 15px;
-    }
-    
-    .overview-booking-header {
+        display: flex;
         flex-direction: column;
         align-items: center;
-        text-align: center;
-    }
-    
-    .overview-booking-header-left {
-        margin-bottom: 15px;
-    }
-}
-
-@media (max-width: 576px) {
-    .scroll-wrapper {
-        gap: 8px;
-    }
-    
-    .scroll-btn {
-        min-width: 65px;
-        font-size: 12px;
-        padding: 8px 10px;
-    }
-    
-    .date-btn {
-        min-width: 70px;
-    }
-    
-    .time-slot-btn {
         min-width: 85px;
+        padding: 10px 12px;
     }
-}
 
-/* Additional Styling */
-.icon-colored {
-    color: #007bff;
-}
+    .date-btn .date-day {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+        opacity: 0.7;
+    }
 
-.nav-tabs .nav-link {
-    border: 2px solid transparent;
-    border-radius: 8px 8px 0 0;
-    font-weight: 500;
-    color: #495057;
-}
+    .date-btn .date-number {
+        font-size: 20px;
+        font-weight: bold;
+        line-height: 1;
+        margin-bottom: 2px;
+    }
 
-.nav-tabs .nav-link.active {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-}
+    .date-btn .date-month {
+        font-size: 11px;
+        font-weight: 500;
+        opacity: 0.8;
+    }
 
-.tab-content {
-    border: 2px solid #e9ecef;
-    border-top: none;
-    border-radius: 0 0 8px 8px;
-    padding: 20px;
-    background: white;
-}
+    .date-btn.active {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        border-color: #007bff;
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+
+    .date-btn.active .date-day,
+    .date-btn.active .date-month {
+        opacity: 0.9;
+    }
+
+    /* Time Slot Button Styles */
+    .time-slot-btn {
+        min-width: 100px;
+        padding: 10px 16px;
+        font-weight: 500;
+    }
+
+    .time-slot-btn.selected {
+        background: linear-gradient(135deg, #28a745, #1e7e34);
+        color: white;
+        border-color: #28a745;
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+
+    .time-slot-btn.timeslotdisabled {
+        background-color: #e9ecef !important;
+        color: #6c757d !important;
+        cursor: not-allowed !important;
+        border-color: #dee2e6 !important;
+    }
+
+    .time-slot-btn.timeslotdisabled:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Layout Improvements */
+    .date-selector-wrapper {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .time-slot-wrapper {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: 10px;
+    }
+
+    .overview-booking-header {
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 20px;
+        margin-bottom: 25px;
+    }
+
+    .overview-booking-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .overview-booking-list li {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .overview-booking-list li::before {
+        content: '';
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin-right: 8px;
+        border-radius: 50%;
+    }
+
+    .overview-booking-list li.available::before {
+        background-color: #28a745;
+    }
+
+    .overview-booking-list li.booked::before {
+        background-color: #dc3545;
+    }
+
+    .overview-booking-list li.selected::before {
+        background-color: #007bff;
+    }
+
+    .overview-date-area {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #dee2e6;
+    }
+
+    .overview-date-header .title {
+        font-size: 18px;
+        color: #495057;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    /* Form Styling */
+    .booking-appoint-form-area {
+        background: #ffffff;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .booking-appoint-form-area .title {
+        font-size: 20px;
+        color: #495057;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #e9ecef;
+        font-weight: 600;
+    }
+
+    .booking-appoint-form .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 12px 15px;
+        font-size: 14px;
+        transition: border-color 0.3s ease;
+    }
+
+    .booking-appoint-form .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .booking-appoint-form textarea.form-control {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .cmn-btn {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .cmn-btn:hover {
+        background: linear-gradient(135deg, #0056b3, #004085);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+
+    .cmn-btn[data-value="1"] {
+        background: linear-gradient(135deg, #28a745, #1e7e34);
+    }
+
+    .cmn-btn[data-value="1"]:hover {
+        background: linear-gradient(135deg, #1e7e34, #155724);
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .scroll-btn {
+            min-width: 70px;
+            font-size: 13px;
+            padding: 10px 12px;
+        }
+        
+        .date-btn {
+            min-width: 75px;
+            padding: 8px 10px;
+        }
+        
+        .date-btn .date-number {
+            font-size: 18px;
+        }
+        
+        .time-slot-btn {
+            min-width: 90px;
+            padding: 8px 12px;
+        }
+        
+        .overview-booking-list {
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .overview-booking-header {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .overview-booking-header-left {
+            margin-bottom: 15px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .scroll-wrapper {
+            gap: 8px;
+        }
+        
+        .scroll-btn {
+            min-width: 65px;
+            font-size: 12px;
+            padding: 8px 10px;
+        }
+        
+        .date-btn {
+            min-width: 70px;
+        }
+        
+        .time-slot-btn {
+            min-width: 85px;
+        }
+    }
+
+    /* Additional Styling */
+    .icon-colored {
+        color: #007bff;
+    }
+
+    .nav-tabs .nav-link {
+        border: 2px solid transparent;
+        border-radius: 8px 8px 0 0;
+        font-weight: 500;
+        color: #495057;
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+
+    .tab-content {
+        border: 2px solid #e9ecef;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        padding: 20px;
+        background: white;
+    }
 </style>
 @endpush
 
