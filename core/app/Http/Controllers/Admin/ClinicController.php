@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Log;
 
 class ClinicController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $pageTitle = "All Clinics";
         $emptyMessage = "No Clinics Found";
 
@@ -23,7 +24,8 @@ class ClinicController extends Controller
         return view('admin.clinic.index', compact('pageTitle', 'emptyMessage', 'clinics', 'locations'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email',
@@ -32,11 +34,13 @@ class ClinicController extends Controller
             'location_id' => 'required|exists:locations,id',
             'image' => 'nullable|image|mimes:jpg,jpeg,png',
             'map_location' => 'nullable|string',
+            'consultation_fee' => 'required|numeric|min:0',
+            'status' => 'required',
         ]);
 
         $clinic = new Clinic();
 
-            if ($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
             try {
                 $clinic->photo = fileUploader($request->image, getFilePath('clinic'), getFileSize('clinic'), $clinic->image);
             } catch (\Exception $exp) {
@@ -50,46 +54,50 @@ class ClinicController extends Controller
         $clinic->phone = $request->phone;
         $clinic->address = $request->address;
         $clinic->location_id = $request->location_id;
+        $clinic->status = $request->status;
         $clinic->map_location = $request->map_location;
+        $clinic->fees = $request->consultation_fee;
         $clinic->save();
 
         $notify[] = ['success', 'Clinic added successfully'];
-    return back()->withNotify($notify);
+        return back()->withNotify($notify);
     }
 
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         $clinic = Clinic::findOrFail($id);
 
         $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email',
-        'phone' => 'nullable|string|max:50',
-        'address' => 'nullable|string',
-        'location_id' => 'required|exists:locations,id',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png',
-        'map_location' => 'nullable|string',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'phone' => 'nullable|string|max:50',
+            'address' => 'nullable|string',
+            'location_id' => 'required|exists:locations,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png',
+            'map_location' => 'nullable|string',
+            'status' => 'required|in:0,1',
+            'consultation_fee' => 'required|numeric|min:0'
         ]);
 
 
-    if($request->hasFile('image')){
-        try {
-            $fileManager = new FileManager($request->file('image'));
-            $fileManager->path = getFilePath('clinic');
-            $fileManager->size = getFileSize('clinic');
-            
-            $fileManager->old = $clinic->photo;
+        if ($request->hasFile('image')) {
+            try {
+                $fileManager = new FileManager($request->file('image'));
+                $fileManager->path = getFilePath('clinic');
+                $fileManager->size = getFileSize('clinic');
 
-            $fileManager->upload();
+                $fileManager->old = $clinic->photo;
 
-            $clinic->photo = $fileManager->filename;
-            
-        } catch (Exception $e) {
-            Log::error('error in updating image:', ['error' => $e->getMessage()]);
+                $fileManager->upload();
+
+                $clinic->photo = $fileManager->filename;
+            } catch (Exception $e) {
+                Log::error('error in updating image:', ['error' => $e->getMessage()]);
+            }
         }
-    }
 
-    Log::info($clinic->photo);
+        Log::info($clinic->photo);
 
         $clinic->name = $request->name;
         $clinic->email = $request->email;
@@ -97,6 +105,8 @@ class ClinicController extends Controller
         $clinic->address = $request->address;
         $clinic->location_id = $request->location_id;
         $clinic->map_location = $request->map_location;
+        $clinic->fees = $request->consultation_fee;
+        $clinic->status = $request->status;
 
         // $clinic->slot_type = $request->slot_type;
 
@@ -112,9 +122,8 @@ class ClinicController extends Controller
         // $clinic->serial_day = $request->serial_day;
         // $clinic->max_serial = $request->max_serial;
         // $clinic->duration = $request->duration;
-        $clinic->fees = $request->fees;
 
-         if ($request->slot_type == 1 && $request->max_serial > 0) {
+        if ($request->slot_type == 1 && $request->max_serial > 0) {
             ///Morning Sessions
             $serialOrSlot = [];
             for ($i = 1; $i <= $request->max_serial; $i++) {
@@ -122,7 +131,6 @@ class ClinicController extends Controller
             }
             $clinic->serial_or_slot = $serialOrSlot;
             $clinic->max_serial = $request->max_serial;
- 
         } elseif ($request->slot_type == 2 && $request->duration > 0) {
             ///Morning Sessions
             $startTime    = Carbon::parse($request->start_time);
@@ -171,7 +179,6 @@ class ClinicController extends Controller
             $clinic->duration       = $request->duration;
             $clinic->start_time2     = ($request->start_time2) ? Carbon::parse($request->start_time2)->format('h:i a') : null;
             $clinic->end_time2      = ($request->end_time2) ? Carbon::parse($request->end_time2)->format('h:i a') : null;
-
         } else {
             $notify[] = ['error', 'Select the maximum serial or duration'];
             return back()->withNotify($notify);
@@ -179,13 +186,10 @@ class ClinicController extends Controller
 
         $clinic->slot_type  = $request->slot_type;
         $clinic->serial_day = $request->serial_day;
-        
+
         $clinic->save();
 
         $notify[] = ['success', 'Clinic updated successfully'];
         return back()->withNotify($notify);
     }
-
-
-
 }

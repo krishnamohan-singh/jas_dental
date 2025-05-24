@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use App\Constants\Status;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -34,8 +35,8 @@ class Clinic extends Model
     }
     public function doctors()
     {
-         return $this->belongsToMany(Doctor::class, 'clinic_doctor', 'clinic_id', 'doctor_id')
-        ->withTimestamps();
+        return $this->belongsToMany(Doctor::class, 'clinic_doctor', 'clinic_id', 'doctor_id')
+            ->withTimestamps();
     }
 
     public function appointments()
@@ -54,6 +55,13 @@ class Clinic extends Model
     }
     public function scopeInactive($query)
     {
-        return$query->where('status', Status::INACTIVE);
+        return $query->where('status', Status::INACTIVE);
+    }
+
+
+
+    public function getStatusTextAttribute()
+    {
+        return $this->status ? 'Active' : 'Inactive';
     }
 }

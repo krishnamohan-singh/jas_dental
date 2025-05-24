@@ -22,7 +22,7 @@ class DepartmentController extends Controller
         $imageValidation = $id ? 'nullable' : 'required';
 
         $request->validate([
-            'name'       => 'required|max:40|unique:departments,id,'.$id,
+            'name'       => 'required|max:40|unique:departments,id,' . $id,
             'details'    => 'required|max:255',
             'image'      => ["$imageValidation", new FileTypeValidate(['jpg', 'jpeg', 'png'])],
         ]);
@@ -75,6 +75,35 @@ class DepartmentController extends Controller
         $location->name    = $request->name;
         $location->save();
         $notify[] = ['success', $notification];
+        return back()->withNotify($notify);
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'details' => 'required'
+        ]);
+
+        $department = Department::findOrFail($id);
+        $department->name = $request->name;
+        $department->details = $request->details;
+
+
+        if ($request->hasFile('image')) {
+            try {
+                $department->image = fileUploader($request->image, getFilePath('department'), getFileSize('department'), @$department->image);
+            } catch (\Exception $exp) {
+                $notify[] = ['error', 'Couldn\'t upload category image'];
+                return back()->withNotify($notify);
+            }
+        }
+
+        $department->save();
+
+        $notify[] = ['success', 'Department Updated Successfully'];
         return back()->withNotify($notify);
     }
 }

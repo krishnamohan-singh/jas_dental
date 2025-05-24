@@ -38,15 +38,17 @@
                                         </td>
                                         <td>
                                             @if ($appointment->added_staff_id)
-                                                <a href="{{route('admin.staff.detail', $appointment->staff->id)}}">{{ __(@$appointment->staff->name) }}</a>
-                                                 <br> <span
-                                                    class="text--small badge badge--primary">@lang('Staff')</span>
+                                                <a
+                                                    href="{{ route('admin.staff.detail', $appointment->staff->id) }}">{{ __(@$appointment->staff->name) }}</a>
+                                                <br> <span class="text--small badge badge--primary">@lang('Staff')</span>
                                             @elseif($appointment->added_assistant_id)
-                                                <a href="{{route('admin.assistant.detail', $appointment->assistant->id)}}"> {{ __(@$appointment->assistant->name) }}</a>
-                                                <br> <span
-                                                    class="text--small badge badge--dark">@lang('Assistant')</span>
+                                                <a
+                                                    href="{{ route('admin.assistant.detail', $appointment->assistant->id) }}">
+                                                    {{ __(@$appointment->assistant->name) }}</a>
+                                                <br> <span class="text--small badge badge--dark">@lang('Assistant')</span>
                                             @elseif($appointment->added_doctor_id)
-                                               <a href="{{route('admin.doctor.detail', $appointment->doctor->id)}}"> {{ __(@$appointment->doctor->name) }}</a> <br> <span
+                                                <a href="{{ route('admin.doctor.detail', $appointment->doctor->id) }}">
+                                                    {{ __(@$appointment->doctor->name) }}</a> <br> <span
                                                     class="text--small badge badge--success">@lang('Doctor')</span>
                                             @elseif($appointment->added_admin_id)
                                                 {{ __(@$appointment->admin->name) }} <br> <span
@@ -60,15 +62,21 @@
                                                 @if ($appointment->delete_by_admin)
                                                     <span class="text--small badge badge--primary">@lang('Admin')</span>
                                                 @elseif ($appointment->delete_by_staff)
-                                                    <a href="{{route('admin.staff.detail', $appointment->deletedByStaff->id)}}"> {{ __($appointment->deletedByStaff->name) }}</a>
+                                                    <a
+                                                        href="{{ route('admin.staff.detail', $appointment->deletedByStaff->id) }}">
+                                                        {{ __($appointment->deletedByStaff->name) }}</a>
                                                     <br>
                                                     <span class="text--small badge badge--dark">@lang('Staff')</span>
                                                 @elseif ($appointment->delete_by_assistant)
-                                                    <a href="{{route('admin.assistant.detail', $appointment->deletedByAssistant->id)}}"> {{ __($appointment->deletedByAssistant->name) }}</a>
+                                                    <a
+                                                        href="{{ route('admin.assistant.detail', $appointment->deletedByAssistant->id) }}">
+                                                        {{ __($appointment->deletedByAssistant->name) }}</a>
                                                     <br>
                                                     <span class="text--small badge badge--success">@lang('Assistant')</span>
                                                 @elseif ($appointment->delete_by_doctor)
-                                                    <a href="{{route('admin.doctor.detail', $appointment->deletedByDoctor->id)}}"> {{ __($appointment->deletedByDoctor->name) }}</a>
+                                                    <a
+                                                        href="{{ route('admin.doctor.detail', $appointment->deletedByDoctor->id) }}">
+                                                        {{ __($appointment->deletedByDoctor->name) }}</a>
                                                     <br>
                                                     <span class="text--small badge badge--info">@lang('Doctor')</span>
                                                 @endif
@@ -76,7 +84,8 @@
                                             <td>{{ __(@$appointment->reason) }}</td>
                                         @endif
                                         <td>
-                                            <span class="fw-bold">{{ showDateTime($appointment->booking_date, 'y-m-d') }}</span>
+                                            <span
+                                                class="fw-bold">{{ showDateTime($appointment->booking_date, 'y-m-d') }}</span>
                                         </td>
                                         <td>{{ $appointment->time_serial }}</td>
                                         <td> @php  echo $appointment->paymentBadge;  @endphp </td>
