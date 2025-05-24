@@ -37,11 +37,27 @@
                                             @endphp
 
                                             <button type="button" class="btn btn-sm btn-outline--primary editBtn cuModalBtn"
-                                                data-resource="{{ $department }}" data-modal_title="@lang('Edit Department')"
-                                                data-has_status="1">
+                                                data-resource='@json($department)'
+                                                data-action="{{ route('admin.department.update', $department->id) }}"
+                                                data-modal_title="@lang('Edit Department')" data-has_status="1">
                                                 <i class="la la-pencil-alt"></i>@lang('Edit')
                                             </button>
                                         </td>
+
+                                        {{-- <td>
+                                            @php
+                                                $department->image_with_path = getImage(
+                                                    getFilePath('department') . '/' . $department->image,
+                                                    getFileSize('department'),
+                                                );
+                                            @endphp
+
+                                            <button type="button" class="btn btn-sm btn-outline--primary editBtn cuModalBtn"
+                                                data-resource='@json($department)'
+                                                data-modal_title="@lang('Edit Department')" data-has_status="1">
+                                                <i class="la la-pencil-alt"></i>@lang('Edit')
+                                            </button>
+                                        </td> --}}
                                     </tr>
                                 @empty
                                     <tr>
@@ -74,6 +90,8 @@
                 </div>
                 <form action="{{ route('admin.department.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="_method" id="formMethod" value="PUT">
+
                     <div class="modal-body">
 
                         <div class="row">
@@ -100,7 +118,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn--primary h-45 w-100">@lang('Submit')</button>
+                        <button type="submit" class="btn btn-success h-45 w-100">@lang('Submit')</button>
                     </div>
                 </form>
             </div>

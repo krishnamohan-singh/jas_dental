@@ -2,11 +2,13 @@
 
 namespace App\Traits;
 
-use App\Constants\Status; 
+use App\Constants\Status;
 use App\Models\Appointment;
 use App\Models\AssistantDoctorTrack;
+use App\Models\Deposit;
 use App\Models\Doctor;
 use App\Models\Clinic;
+use App\Models\Transaction;
 use App\Notify\Email;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Exception;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
+
 /**
  * All Common functionalities to make an appointment
  */
@@ -68,18 +71,20 @@ trait AppointmentManager
         foreach ($collection as  $value) {
             $data->push($value->time_serial);
         }
-        return response()->json(["now"=> Carbon::now(), "data"=>@$data]);
+        return response()->json(["now" => Carbon::now(), "data" => @$data]);
     }
 
-   
+
 
     public function store(Request $request, $id)
     {
-       
+
         // $this->validation($request);
-       
-       
-        $validator = Validator::make($request->all(), [
+
+
+        $validator = Validator::make(
+            $request->all(),
+            [
                 'name'           => 'required|max:40',
                 'booking_date'   => 'required|date|after_or_equal:today',
                 'time_serial'    => 'required',
@@ -90,14 +95,15 @@ trait AppointmentManager
             ],
             [
                 'time_serial.required' => 'You did not select any time or Serial',
-            ]);
-            
+            ]
+        );
 
-    if ($validator->fails()) {
-        return redirect('clinics/'.$id)
-            ->withErrors($validator)
-            ->withInput();
-    }
+
+        if ($validator->fails()) {
+            return redirect('clinics/' . $id)
+                ->withErrors($validator)
+                ->withInput();
+        }
 
         //$doctor = Doctor::active()->find($id);
         $clinic = Clinic::active()->find($id);
@@ -105,7 +111,7 @@ trait AppointmentManager
         if (!$clinic) {
             $notify[] = ['error', 'The clinic isn\'t available for the appointment'];
             // return back()->withNotify($notify);
-            return redirect('clinics/'.$id)->withNotify($notify);
+            return redirect('clinics/' . $id)->withNotify($notify);
         }
 
         if (!($clinic->serial_or_slot || $clinic->serial_or_slot1 || $clinic->serial_or_slot2)) {
@@ -177,7 +183,7 @@ trait AppointmentManager
             $appointment->try  = Status::NO;
         } else {
             $appointment->try  = Status::YES;
-        } 
+        }
 
         $appointment->save();
 
@@ -194,31 +200,31 @@ trait AppointmentManager
             'booking_date' => $appointment->booking_date,
             'time_serial'  => $appointment->time_serial,
             'clinic_name'  => $clinic->name,
-            'clinic_address'=>$clinic->address,
-            'clinic_mobile'=>$clinic->phone,
-            'clinic_location'=>$clinic->location->name,
+            'clinic_address' => $clinic->address,
+            'clinic_mobile' => $clinic->phone,
+            'clinic_location' => $clinic->location->name,
             'clinic_fees'  => '' . $clinic->fees . ' ' . $general->cur_text . '',
         ], ['email', 'sms']);
 
 
         //mail send to doctor
         $data = [
-            'doctor_name' => $clinic->name,            
+            'doctor_name' => $clinic->name,
             'patient_name'    => $appointment->name,
             'patient_email'    => $appointment->email,
             'patient_phone'    => $appointment->mobile,
             'booking_date'    => $appointment->booking_date,
-            'time_serial'    => $appointment->time_serial, 
+            'time_serial'    => $appointment->time_serial,
             'site_name'   => $general->site_name,
         ];
         try {
-            $htmlContent = View::make('CoustomMailTemplate.AppointmentMailToDoctor',$data)->render();
-             
+            $htmlContent = View::make('CoustomMailTemplate.AppointmentMailToDoctor', $data)->render();
+
             $email = new Email();
             $email->subject = "New Appointment Received";
             $email->message = $htmlContent;
             $email->email = $clinic->email;
-            $email->bcc = ["teaminmogic@gmail.com", 'azad@inmogic.co','krishnamohansingh605@gmail.com'];
+            $email->bcc = ["teaminmogic@gmail.com", 'azad@inmogic.co', 'krishnamohansingh605@gmail.com'];
             $email->receiverName = $clinic->name;
             $email->sendSmtpMail();
             // Log::info('Email sent successfully to ');
@@ -229,10 +235,6 @@ trait AppointmentManager
 
         $notify[] = ['success', 'New Appointment made successfully'];
         return back()->withNotify($notify);
-       
-
-
-
     }
 
     protected function validation($request)
@@ -252,9 +254,33 @@ trait AppointmentManager
             ]
         );
     }
-    public function done($id)
+    public function done(Request $request, $id)
     {
+        Log::info('request came');
         $appointment =  Appointment::findOrFail($id);
+
+        Log::info($request->all());
+
+        $clinic = Clinic::findOrFail($request->input('clinic_id'));
+        $amount = $request->input('consultation_fee');
+        $method = 'cash';
+        $reason = $request->input('reason_for_extra_charge');
+
+        Log::info('clinicId', ['clinicId' => $clinic->id, 'amount' => $amount, 'method' => $method, 'paymentId' => $appointment->id, 'status' => $appointment->status]);
+
+        $clinicFees = $clinic->fees;
+
+        $deposit = new Deposit();
+        $deposit->appointment_id = $appointment->id;
+        $deposit->clinic_id = $clinic->id;
+        $deposit->amount = $clinicFees;
+        $deposit->charge = $amount;  // amount entered on new payment
+        $deposit->detail = $reason;
+        $deposit->trx = $appointment->trx;
+        $deposit->status = 1;
+        $deposit->save();
+
+
 
         if ($appointment->is_complete == Status::APPOINTMENT_INCOMPLETE) {
 

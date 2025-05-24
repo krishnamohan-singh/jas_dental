@@ -7,7 +7,8 @@
                     <div class="form-group">
 
                         <div class="image-upload-wrapper">
-                            <div class="image-upload-preview" style="background-image: url({{ getImage(getFilePath('clinic') . '/' . $clinic->photo, getFileSize('clinic')) }})">
+                            <div class="image-upload-preview"
+                                style="background-image: url({{ getImage(getFilePath('clinic') . '/' . $clinic->photo, getFileSize('clinic')) }})">
                             </div>
                         </div>
                     </div>
@@ -23,11 +24,11 @@
                             <span class="fw-bold">{{ __($clinic->name) }}</span>
                         </li>
 
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{-- <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Username')
                             <a href="{{ route('admin.doctor.detail', $clinic->id) }}"><span
                                     class="fw-bold">{{ $clinic->username }}</span></a>
-                        </li>
+                        </li> --}}
 
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Email')
@@ -35,12 +36,12 @@
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Status')
-                            <span class="fw-bold"> @php echo $clinic->statusBadge @endphp</span>
+                            <span class="fw-bold"> @php echo $clinic->status_text @endphp</span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{-- <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Feature')
                             <span class="fw-bold"> @php echo $clinic->featureBadge @endphp</span>
-                        </li>
+                        </li> --}}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Location')
                             <span class="fw-bold"> {{ __($clinic->location->name) }}</span>
@@ -90,7 +91,8 @@
                             <div class="time-serial-parent mt-3">
                                 <h3 class="py-2">@lang('Morning Shift')</h3>
                                 @foreach ($clinic->serial_or_slot as $item)
-                                    <button type="button" class="btn btn-primary mr-2 mb-2 available-time item-{{ slug($item) }}"
+                                    <button type="button"
+                                        class="btn btn-primary mr-2 mb-2 available-time item-{{ slug($item) }}"
                                         data-value="{{ $item }}">{{ __($item) }}
                                     </button>
                                 @endforeach
@@ -99,7 +101,8 @@
                             <div class="time-serial-parent mt-3">
                                 <h3 class="py-2">@lang('Afternoon Shift')</h3>
                                 @foreach ($clinic->serial_or_slot1 as $item)
-                                    <button type="button" class="btn btn-primary mr-2 mb-2 available-time item-{{ slug($item) }}"
+                                    <button type="button"
+                                        class="btn btn-primary mr-2 mb-2 available-time item-{{ slug($item) }}"
                                         data-value="{{ $item }}">{{ __($item) }}
                                     </button>
                                 @endforeach
@@ -108,7 +111,8 @@
                             <div class="time-serial-parent mt-3">
                                 <h3 class="py-2">@lang('Evening Shift')</h3>
                                 @foreach ($clinic->serial_or_slot2 as $item)
-                                    <button type="button" class="btn btn-primary mr-2 mb-2 available-time item-{{ slug($item) }}"
+                                    <button type="button"
+                                        class="btn btn-primary mr-2 mb-2 available-time item-{{ slug($item) }}"
                                         data-value="{{ $item }}">{{ __($item) }}
                                     </button>
                                 @endforeach
@@ -130,36 +134,36 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                            <div class="form-group">
-                                <label>@lang('Age')</label>
-                                <div class="input-group">
-                                    <input type="number" name="age" step="any" class="form-control"
-                                        value="{{ old('age') }}" required>
-                                    <span class="input-group-text">
-                                        @lang('Years')
-                                    </span>
+                                <div class="form-group">
+                                    <label>@lang('Age')</label>
+                                    <div class="input-group">
+                                        <input type="number" name="age" step="any" class="form-control"
+                                            value="{{ old('age') }}" required>
+                                        <span class="input-group-text">
+                                            @lang('Years')
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                            </div>
                             <div class="col-md-6">
-                            <div class="form-group">
-                                <label>@lang('E-mail')</label>
-                                <input type="email" name="email" class="form-control" value="{{ old('email') }}"
-                                    required>
-                            </div>
-                            </div>
-                            <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">@lang('Mobile')
-                                    <i class="fa fa-info-circle text--primary" title="@lang('Add the country code by general setting. Otherwise, SMS won\'t send to that number.')">
-                                    </i>
-                                </label>
-                                <div class="input-group">
-                                    <span class="input-group-text">{{ gs('country_code') }}</span>
-                                    <input type="number" name="mobile" value="{{ old('mobile') }}" class="form-control"
-                                        autocomplete="off" required>
+                                <div class="form-group">
+                                    <label>@lang('E-mail')</label>
+                                    <input type="email" name="email" class="form-control" value="{{ old('email') }}"
+                                        required>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">@lang('Mobile')
+                                        <i class="fa fa-info-circle text--primary" title="@lang('Add the country code by general setting. Otherwise, SMS won\'t send to that number.')">
+                                        </i>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">{{ gs('country_code') }}</span>
+                                        <input type="number" name="mobile" value="{{ old('mobile') }}"
+                                            class="form-control" autocomplete="off" required>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label>@lang('Disease Details')</label>
@@ -179,15 +183,13 @@
 
 
 @push('style')
-
-<style>
-    a.timeslotdisabled {
-        background-color: #e7e7e7 !important;
-        color: white !important;
-        cursor: not-allowed;
-    }
-</style>
-
+    <style>
+        a.timeslotdisabled {
+            background-color: #e7e7e7 !important;
+            color: white !important;
+            cursor: not-allowed;
+        }
+    </style>
 @endpush
 
 @push('script')

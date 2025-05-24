@@ -134,9 +134,10 @@ Route::middleware('admin')->group(function () {
         Route::post('store/{id?}', 'store')->name('store');
         Route::get('location', 'location')->name('location');
         Route::post('location/store/{id?}', 'locationStore')->name('location.store');
+        Route::put('department/update/{id}', 'update')->name('update');
     });
 
-    Route::controller('ClinicController')->prefix('clinic')->name('clinic.')->group(function(){
+    Route::controller('ClinicController')->prefix('clinic')->name('clinic.')->group(function () {
         Route::get('index', 'index')->name('index');
         Route::post('clinic/store', 'store')->name('store');
         Route::put('update/{id}', 'update')->name('update');
