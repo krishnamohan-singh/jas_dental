@@ -1,8 +1,19 @@
 @extends($activeTemplate . 'layouts.frontend')
 
 @section('content')
+
+
+
+
 <section class="clinic-details ptb-80">
+    
     <div class="container">
+        <h2 class="text-center fw-bold" style="font-size: 2rem;">
+                  {{ $clinic->heading }}
+                </h2>
+        <div class="mb-2 py-3">
+    <p style="text-align: center;">{{ $clinic->discription }}</p>
+</div>
         <div class="row">
             <!-- Left Column: Doctors List -->
             <div class="col-lg-5 order-2 order-lg-1">
@@ -42,9 +53,7 @@
                                                     {{ $doctor->location->name }}
                                                 </a>
                                             </li> 
-                                             <li class="mb-1">
-                                                <i class="fas fa-phone me-2 text-success"></i> {{ $doctor->mobile }}
-                                            </li>
+                                            
                                             <li class="mb-1">
                                                 <i class="fas fa-user-md me-2 text-secondary"></i>
                                                 <strong>@lang('Qualification:')</strong> {{ $doctor->qualification }}
@@ -159,13 +168,13 @@
                                                     <div class="d-md-none mb-3">
                                                         <select class="form-select" id="slotDropdown" onchange="handleSlotChange(this.value)">
                                                             @if ($clinic->serial_or_slot)
-                                                                <option value="#morning">@lang('Morning Slot')</option>
+                                                                <option value="#morning">@lang('Morning')</option>
                                                             @endif
                                                             @if ($clinic->serial_or_slot1)
-                                                                <option value="#afternoon">@lang('Afternoon Slot')</option>
+                                                                <option value="#afternoon">@lang('Afternoon')</option>
                                                             @endif
                                                             @if ($clinic->serial_or_slot2)
-                                                                <option value="#evening">@lang('Evening Slot')</option>
+                                                                <option value="#evening">@lang('Evening')</option>
                                                             @endif
                                                         </select>
                                                     </div>
@@ -174,17 +183,17 @@
                                                     <ul class="nav nav-tabs mb-3 d-none d-md-flex" id="slotTab" role="tablist">
                                                         @if ($clinic->serial_or_slot)
                                                             <li class="nav-item" role="presentation">
-                                                                <button class="nav-link active" id="morning-tab" data-bs-toggle="tab" data-bs-target="#morning" type="button" role="tab">@lang('Morning Slot')</button>
+                                                                <button class="nav-link active" id="morning-tab" data-bs-toggle="tab" data-bs-target="#morning" type="button" role="tab">@lang('Morning')</button>
                                                             </li>
                                                         @endif
                                                         @if ($clinic->serial_or_slot1)
                                                             <li class="nav-item" role="presentation">
-                                                                <button class="nav-link @if(!$clinic->serial_or_slot) active @endif" id="afternoon-tab" data-bs-toggle="tab" data-bs-target="#afternoon" type="button" role="tab">@lang('Afternoon Slot')</button>
+                                                                <button class="nav-link @if(!$clinic->serial_or_slot) active @endif" id="afternoon-tab" data-bs-toggle="tab" data-bs-target="#afternoon" type="button" role="tab">@lang('Afternoon')</button>
                                                             </li>
                                                         @endif
                                                         @if ($clinic->serial_or_slot2)
                                                             <li class="nav-item" role="presentation">
-                                                                <button class="nav-link @if(!$clinic->serial_or_slot && !$clinic->serial_or_slot1) active @endif" id="evening-tab" data-bs-toggle="tab" data-bs-target="#evening" type="button" role="tab">@lang('Evening Slot')</button>
+                                                                <button class="nav-link @if(!$clinic->serial_or_slot && !$clinic->serial_or_slot1) active @endif" id="evening-tab" data-bs-toggle="tab" data-bs-target="#evening" type="button" role="tab">@lang('Evening')</button>
                                                             </li>
                                                         @endif
                                                     </ul>
@@ -198,12 +207,14 @@
                                                                 <div class="time-slot-wrapper">
                                                                     <div class="time-slot-select scroll-wrapper">
                                                                         @foreach ($clinic->serial_or_slot as $item)
+                                                                            @php $slug = Str::slug($item); @endphp
                                                                             <button type="button"
-                                                                                class="scroll-btn time-slot-btn available-time"
+                                                                                class="scroll-btn time-slot-btn available-time item-{{ $slug }}"
                                                                                 data-value="{{ $item }}">
                                                                                 {{ __($item) }}
                                                                             </button>
                                                                         @endforeach
+                                                                       
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -216,8 +227,9 @@
                                                                 <div class="time-slot-wrapper">
                                                                     <div class="time-slot-select scroll-wrapper">
                                                                         @foreach ($clinic->serial_or_slot1 as $item)
+                                                                            @php $slug = Str::slug($item); @endphp
                                                                             <button type="button"
-                                                                                class="scroll-btn time-slot-btn available-time"
+                                                                                class="scroll-btn time-slot-btn available-time item-{{ $slug }}"
                                                                                 data-value="{{ $item }}">
                                                                                 {{ __($item) }}
                                                                             </button>
@@ -234,8 +246,9 @@
                                                                 <div class="time-slot-wrapper">
                                                                     <div class="time-slot-select scroll-wrapper">
                                                                         @foreach ($clinic->serial_or_slot2 as $item)
+                                                                            @php $slug = Str::slug($item); @endphp
                                                                             <button type="button"
-                                                                                class="scroll-btn time-slot-btn available-time"
+                                                                                class="scroll-btn time-slot-btn available-time item-{{ $slug }}"
                                                                                 data-value="{{ $item }}">
                                                                                 {{ __($item) }}
                                                                             </button>
@@ -278,7 +291,7 @@
                                                                         <div class="col-lg-12 form-group d-flex flex-wrap justify-content-between gap-2">
                                                                             <button type="submit" class="cmn-btn payment-system" data-value="2">@lang('Book Now')</button>
                                                                             @if (gs('online_payment'))
-                                                                               <!-- <button type="submit" class="cmn-btn payment-system" data-value="1">@lang('Pay Online')</button> -->
+                                                                               <button type="submit" class="cmn-btn payment-system" data-value="1">@lang('Pay Online')</button>
                                                                             @endif
                                                                             <input type="hidden" name="payment_system" class="payment" required>
                                                                         </div>
@@ -357,7 +370,7 @@
 
 @push('style')
 <style>
-    /* Date and Time Slot Selectors */
+/* Date and Time Slot Selectors */
     .scroll-wrapper {
         display: flex;
         overflow-x: auto;
@@ -705,38 +718,59 @@
 (function($) {
     "use strict";
 
-    // Handle time slot selection
+    // Time slot selection
     $(".available-time").on('click', function() {
         if ($(this).hasClass("timeslotdisabled")) return;
 
-        $(".available-time").removeClass("selected");
-        $(this).addClass("selected");
+        $('.available-time').removeClass('selected');
+        $(this).addClass('selected');
 
         $('.time').val($(this).data('value'));
+        $('.book-time').text($(this).data('value'));
     });
 
-    // Handle date selection
-    $('#custom-date-select .date-btn').on('click', function () {
-        $('#custom-date-select .date-btn').removeClass('active');
-        $(this).addClass('active');
+    // Convert to slug format
+    function slug(text) {
+        return text.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+    }
 
-        const selectedDate = $(this).data('date');
-        $('#timeslotedate').val(selectedDate).trigger('change');
+    // Booking date change handler
+    $("input[name=booking_date], select[name=booking_date]").on('change', function() {
+        let selectedDate = $(this).val();
+        $('.date').text(selectedDate);
+
+        $('.available-time').removeClass('btn--success disabled timeslotdisabled').addClass('active-time');
+
+        let url = "{{ route('doctors.appointment.available.date') }}";
+        let data = {
+            date: selectedDate,
+            doctor_id: '{{ $doctor->id ?? $clinic->doctor_id ?? '' }}'
+        };
+
+        $.get(url, data, function(response) {
+            if (!response.data || !response.data.length) {
+                $('.available-time').removeClass('active-time disabled');
+            } else {
+                $.each(response.data, function(key, value) {
+                    let slugged = slug(value);
+                    $(`.item-${slugged}`).addClass('active-time disabled');
+                });
+            }
+
+            checkPrevTimeSlot(response.now, selectedDate);
+        });
     });
 
-    // Form field handlers
+    // Live user input reflection
     $("[name=name]").on('input', function() {
         $('.name').text($(this).val());
     });
-    
     $("[name=age]").on('input', function() {
         $('.age').text($(this).val());
     });
-    
     $("[name=email]").on('input', function() {
         $('.email').text($(this).val());
     });
-    
     $("[name=mobile]").on('input', function() {
         $('.mobile').text($(this).val());
     });
@@ -744,50 +778,48 @@
     // Reset form
     $(".reset").on('click', function() {
         $('.appointment-from')[0].reset();
+        $('.book-time').text('');
+        $('.available-time').removeClass('selected');
     });
 
-    // Payment system selection
+    // Select payment system
     $('.payment-system').on('click', function() {
         $('.payment').val($(this).data('value'));
     });
 
-    // Initialize date change trigger
+    // Trigger slot availability check on page load
     $("#timeslotedate").trigger('change');
 
 })(jQuery);
 
-// Check previous time slots
+// Disable past time slots
+function checkPrevTimeSlot(nowString, selectedDate) {
+    let now = new Date(nowString);
+    $('.book-time').text('');
+    $('.time').val('');
 
-        function checkPrevTimeSlot($now){ 
-            var jsNowDate = new Date($now);
-            $('.book-time').text("");
-            $('.time').val("");
+    $('.available-time').each(function() {
+        $(this).removeClass("timeslotdisabled");
 
-            $('.available-time').each(function(i, item) {
-                $(item).removeClass("timeslotdisabled");
+        let timeValue = $(this).data('value');
 
-                var time = $(item).data('value');
+        let fullDateTime = `${selectedDate} ${timeValue}`;
+        let [date, time] = fullDateTime.split(' ');
+        let [year, month, day] = date.split('-');
+        let [hours, minutes] = time.split(':');
 
-                var dateString = $("select[name=booking_date]").select2("val") +" "+time;
-                // Convert to standard format (YYYY-MM-DDTHH:mm:ss)
-                var formattedDateString = dateString.replace(" am", "").replace(" pm", "").replace(":", "-");
-                var [year, month, day, hour, minute] = formattedDateString.split(/[-\s:]/);
+        // Convert to 24h format
+        let hour = parseInt(hours);
+        if (time.toLowerCase().includes('pm') && hour < 12) hour += 12;
+        if (time.toLowerCase().includes('am') && hour === 12) hour = 0;
 
-                // Convert 12-hour format to 24-hour format
-                let hours = parseInt(hour);
-                if (dateString.includes("pm") && hours !== 12) {
-                    hours += 12;
-                } else if (dateString.includes("am") && hours === 12) {
-                    hours = 0;
-                }
-                // Create Date object
-                var jsDate = new Date(year, month - 1, day, hours, minute);
-                
-                if (jsNowDate > jsDate) {
-                    $(this).addClass("timeslotdisabled");
-                } 
-            });
+        let slotTime = new Date(year, month - 1, day, hour, parseInt(minutes));
+
+        if (now > slotTime) {
+            $(this).addClass("timeslotdisabled");
         }
+    });
+}
   
    
         document.addEventListener('DOMContentLoaded', function() {

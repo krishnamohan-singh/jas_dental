@@ -66,6 +66,7 @@ class ClinicController extends Controller
 
     public function update(Request $request, $id)
     {
+        Log::info('request', ['request' => $request->all()]);
         $clinic = Clinic::findOrFail($id);
 
         $request->validate([
@@ -77,6 +78,8 @@ class ClinicController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png',
             'map_location' => 'nullable|string',
             'status' => 'required|in:0,1',
+            'heading' => 'nullable|string',
+            'discription' => 'nullable',
             'consultation_fee' => 'required|numeric|min:0'
         ]);
 
@@ -106,6 +109,8 @@ class ClinicController extends Controller
         $clinic->location_id = $request->location_id;
         $clinic->map_location = $request->map_location;
         $clinic->fees = $request->consultation_fee;
+        $clinic->heading = $request->heading;
+        $clinic->discription = $request->discription;
         $clinic->status = $request->status;
 
         // $clinic->slot_type = $request->slot_type;

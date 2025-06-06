@@ -1,13 +1,13 @@
 @extends($activeTemplate . 'layouts.frontend')
 @section('content')
-    <div class="container ptb-80 ">
+    <div class="container ptb-80">
         <div class="row justify-content-center">
             <div class="col-lg-9">
                 <form action="{{ route('deposit.insert') }}" method="post" class="deposit-form">
                     @csrf
                     <input type="hidden" name="currency">
                     <input type="hidden" name="trx" value="{{ $trx }}">
-                    <input type="hidden" name="doctor_id" value="{{ $doctorId }}">
+                    <input type="hidden" name="clinic_id" value="{{ $clinicId }}">
                     <div class="gateway-card">
                         <div class="row justify-content-center gy-sm-4 gy-3">
                             <div class="col-lg-6">
@@ -117,7 +117,7 @@
                                     <div class="d-none crypto-message mb-3">
                                         @lang('Conversion with') <span class="gateway-currency"></span> @lang('and final value will Show on next step')
                                     </div>
-                                    <button type="submit" class="cmn-btn w-100" disabled>
+                                    <button type="submit" class="cmn-btn w-100">
                                         @lang('Confirm Deposit')
                                     </button>
                                     <div class="info-text pt-3">
@@ -150,59 +150,97 @@
     <script>
         "use strict";
         (function($) {
-
             var amount = parseFloat($('.amount').val() || 0);
             var gateway, minAmount, maxAmount;
 
+            // Error handling wrapper
+            function safeExecute(fn) {
+                try {
+                    return fn();
+                } catch (error) {
+                    console.error('Error in deposit form:', error);
+                    return false;
+                }
+            }
 
             $('.amount').on('input', function(e) {
-                amount = parseFloat($(this).val());
-                if (!amount) {
-                    amount = 0;
-                }
-                calculation();
+                safeExecute(function() {
+                    amount = parseFloat($(e.target).val());
+                    if (!amount || isNaN(amount)) {
+                        amount = 0;
+                    }
+                    calculation();
+                });
             });
 
             $('.gateway-input').on('change', function(e) {
-                gatewayChange();
+                safeExecute(function() {
+                    gatewayChange();
+                });
             });
 
             function gatewayChange() {
                 let gatewayElement = $('.gateway-input:checked');
+                if (gatewayElement.length === 0) {
+                    console.warn('No gateway selected');
+                    return;
+                }
+
                 let methodCode = gatewayElement.val();
-
                 gateway = gatewayElement.data('gateway');
-                minAmount = gatewayElement.data('min-amount');
-                maxAmount = gatewayElement.data('max-amount');
+                
+                if (!gateway) {
+                    console.warn('Gateway data not found');
+                    return;
+                }
 
-                let processingFeeInfo =
-                    `${parseFloat(gateway.percent_charge).toFixed(2)}% with ${parseFloat(gateway.fixed_charge).toFixed(2)} {{ __(gs('cur_text')) }} charge for payment gateway processing fees`
-                $(".proccessing-fee-info").attr("data-bs-original-title", processingFeeInfo);
+                minAmount = parseFloat(gatewayElement.data('min-amount')) || 0;
+                maxAmount = parseFloat(gatewayElement.data('max-amount')) || 0;
+
+                // Safe property access with fallbacks
+                let percentCharge = parseFloat(gateway.percent_charge || 0).toFixed(2);
+                let fixedCharge = parseFloat(gateway.fixed_charge || 0).toFixed(2);
+                let currencyText = '{{ __(gs("cur_text")) }}';
+                
+                let processingFeeInfo = `${percentCharge}% with ${fixedCharge} ${currencyText} charge for payment gateway processing fees`;
+                
+                let feeInfoElement = $(".proccessing-fee-info");
+                if (feeInfoElement.length > 0) {
+                    feeInfoElement.attr("data-bs-original-title", processingFeeInfo);
+                }
+                
                 calculation();
             }
 
-            gatewayChange();
-
             $(".more-gateway-option").on("click", function(e) {
-                let paymentList = $(".gateway-option-list");
-                paymentList.find(".gateway-option").removeClass("d-none");
-                $(this).addClass('d-none');
-                paymentList.animate({
-                    scrollTop: (paymentList.height() - 60)
-                }, 'slow');
+                safeExecute(function() {
+                    let paymentList = $(".gateway-option-list");
+                    paymentList.find(".gateway-option").removeClass("d-none");
+                    $(e.target).closest('.more-gateway-option').addClass('d-none');
+                    paymentList.animate({
+                        scrollTop: (paymentList.height() - 60)
+                    }, 'slow');
+                });
             });
 
             function calculation() {
-                if (!gateway) return;
-                $(".gateway-limit").text(minAmount + " - " + maxAmount);
+                if (!gateway) {
+                    console.warn('Gateway not initialized');
+                    return;
+                }
+
+                // Safe property access with fallbacks
+                let displayMinAmount = parseFloat(minAmount || 0).toFixed(2);
+                let displayMaxAmount = parseFloat(maxAmount || 0).toFixed(2);
+                $(".gateway-limit").text(displayMinAmount + " - " + displayMaxAmount);
 
                 let percentCharge = 0;
                 let fixedCharge = 0;
                 let totalPercentCharge = 0;
 
-                if (amount) {
-                    percentCharge = parseFloat(gateway.percent_charge);
-                    fixedCharge = parseFloat(gateway.fixed_charge);
+                if (amount && amount > 0) {
+                    percentCharge = parseFloat(gateway.percent_charge || 0);
+                    fixedCharge = parseFloat(gateway.fixed_charge || 0);
                     totalPercentCharge = parseFloat(amount / 100 * percentCharge);
                 }
 
@@ -211,41 +249,68 @@
 
                 $(".final-amount").text(totalAmount.toFixed(2));
                 $(".processing-fee").text(totalCharge.toFixed(2));
-                $("input[name=currency]").val(gateway.currency);
-                $(".gateway-currency").text(gateway.currency);
+                
+                // Safe currency setting
+                let currencyInput = $("input[name=currency]");
+                if (currencyInput.length > 0 && gateway.currency) {
+                    currencyInput.val(gateway.currency);
+                }
+                
+                $(".gateway-currency").text(gateway.currency || '');
 
-                if (amount < Number(gateway.min_amount) || amount > Number(gateway.max_amount)) {
-                    $(".deposit-form button[type=submit]").attr('disabled', true);
+                // Enable/disable submit button based on amount limits
+                let submitButton = $(".deposit-form button[type=submit]");
+                if (amount < Number(minAmount) || amount > Number(maxAmount)) {
+                    submitButton.attr('disabled', true);
                 } else {
-                    $(".deposit-form button[type=submit]").removeAttr('disabled');
+                    submitButton.removeAttr('disabled');
                 }
 
-                if (gateway.currency != "{{ gs('cur_text') }}" && gateway.method.crypto != 1) {
-                    $('.deposit-form').addClass('adjust-height')
+                // Currency conversion handling
+                let currentCurrency = '{{ gs("cur_text") }}';
+                let gatewayCurrency = gateway.currency || '';
+                let isCrypto = gateway.method && gateway.method.crypto == 1;
 
+                if (gatewayCurrency !== currentCurrency && !isCrypto) {
+                    $('.deposit-form').addClass('adjust-height');
                     $(".gateway-conversion, .conversion-currency").removeClass('d-none');
+                    
+                    let rate = parseFloat(gateway.rate || 1).toFixed(2);
                     $(".gateway-conversion").find('.deposit-info__input .text').html(
-                        `1 {{ __(gs('cur_text')) }} = <span class="rate">${parseFloat(gateway.rate).toFixed(2)}</span>  <span class="method_currency">${gateway.currency}</span>`
+                        `1 ${currentCurrency} = <span class="rate">${rate}</span> <span class="method_currency">${gatewayCurrency}</span>`
                     );
-                    $('.in-currency').text(parseFloat(totalAmount * gateway.rate).toFixed(gateway.method.crypto == 1 ?
-                        8 : 2))
+                    
+                    let convertedAmount = parseFloat(totalAmount * (gateway.rate || 1));
+                    let decimalPlaces = isCrypto ? 8 : 2;
+                    $('.in-currency').text(convertedAmount.toFixed(decimalPlaces));
                 } else {
                     $(".gateway-conversion, .conversion-currency").addClass('d-none');
-                    $('.deposit-form').removeClass('adjust-height')
+                    $('.deposit-form').removeClass('adjust-height');
                 }
 
-                if (gateway.method.crypto == 1) {
+                // Crypto message handling
+                if (isCrypto) {
                     $('.crypto-message').removeClass('d-none');
                 } else {
                     $('.crypto-message').addClass('d-none');
                 }
             }
 
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl)
-            })
-            $('.gateway-input').change();
+            // Initialize tooltips safely
+            safeExecute(function() {
+                if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+                    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                        return new bootstrap.Tooltip(tooltipTriggerEl);
+                    });
+                }
+            });
+
+            // Initialize the form
+            safeExecute(function() {
+                gatewayChange();
+            });
+
         })(jQuery);
     </script>
 @endpush

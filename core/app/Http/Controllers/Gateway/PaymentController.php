@@ -9,9 +9,11 @@ use App\Models\AdminNotification;
 use App\Models\Appointment;
 use App\Models\Deposit;
 use App\Models\Doctor;
+use App\Models\Clinic;
 use App\Models\GatewayCurrency;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -25,41 +27,45 @@ class PaymentController extends Controller
         };
 
         $appointment = Appointment::findOrFail($appointmentId);
-        $doctor      = $appointment->doctor;
-        $fees        = $doctor->fees;
-        $doctorId    = $doctor->id;
+        $clinic      = $appointment->clinic;
+        $fees        = $clinic->fees;
+        $clinicId    = $clinic->id;
         $trx         = $appointment->trx;
         $email       = $appointment->email;
 
         $gatewayCurrency = GatewayCurrency::whereHas('method', function ($gate) {
             $gate->where('status', Status::ENABLE);
         })->with('method')->orderby('name')->get();
+
         $pageTitle = "Appointment Payment Method";
 
-        return view('Template::user.payment.deposit', compact('pageTitle', 'fees', 'doctorId', 'trx', 'email', 'gatewayCurrency'));
+        return view('Template::user.payment.deposit', compact('pageTitle', 'fees', 'clinicId', 'trx', 'email', 'gatewayCurrency'));
     }
 
     public function depositInsert(Request $request)
     {
+        Log::info('request', ['request' => $request->all()]);
         $request->validate([
             'amount' => 'required|numeric|gt:0',
-            'gateway' => 'required',
-            'currency' => 'required',
-            'doctor_id'   => 'required|exists:doctors,id',
+            'gateway' => 'nullable',
+            'currency' => 'nullable',
+            'clinic_id'   => 'required|exists:clinics,id',
             'trx'         => 'required',
         ]);
 
         $appointment = Appointment::where('trx', $request->trx)->first();
+        Log::info('appointment', ['appointment' => $appointment]);
         if (!$appointment) {
             $notify[] = ['error', 'Invalid appointment!'];
             return back()->withNotify($notify);
         }
 
 
-        $doctor = Doctor::findOrFail($request->doctor_id);
+        $clinic = Clinic::findOrFail($request->clinic_id);
+        Log::info('clinic', ['clinic' => $clinic]);
 
-        if ($doctor->fees != $request->amount) {
-            $notify[] = ['error', "Sorry! Didn't permit to customize doctor fees."];
+        if ($clinic->fees != $request->amount) {
+            $notify[] = ['error', "Sorry! Didn't permit to customize Clinic fees."];
             return back()->withNotify($notify);
         }
 
@@ -85,7 +91,7 @@ class PaymentController extends Controller
 
         $data = new Deposit();
         $data->appointment_id  = $appointment->id;
-        $data->doctor_id       = $doctor->id;
+        $data->clinic_id       = $clinic->id;
         $data->method_code = $gate->method_code;
         $data->method_currency = strtoupper($gate->currency);
         $data->amount = $request->amount;
@@ -95,8 +101,8 @@ class PaymentController extends Controller
         $data->btc_amount = 0;
         $data->btc_wallet = "";
         $data->trx = getTrx();
-        $data->success_url = urlPath('doctors.all');
-        $data->failed_url = urlPath('doctors.all');
+        $data->success_url = urlPath('clinics.index');
+        $data->failed_url = urlPath('clinics.index');
         $data->save();
         session()->put('Track', $data->trx);
         return to_route('deposit.confirm');

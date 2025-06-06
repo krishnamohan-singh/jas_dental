@@ -16,6 +16,7 @@
                                     <th>@lang('Address')</th>
                                     <th>@lang('Location')</th>
                                     <th>@lang('Map')</th>
+
                                     <th>@lang('Status')</th>
                                     <th>@lang('Action')</th>
                                 </tr>
@@ -53,8 +54,7 @@
                                         </td>
 
                                         <td>
-                                            <button type="button"
-                                                class="btn btn-sm btn-outline--primary editBtn cuModalBtn"
+                                            <button type="button" class="btn btn-sm btn-outline--primary editBtn cuModalBtn"
                                                 data-resource='@json($clinic->toArray() + ['consultation_fee' => $clinic->fees])'
                                                 data-modal_title="@lang('Edit Clinic')"
                                                 data-action="{{ route('admin.clinic.update', $clinic->id) }}"
@@ -132,6 +132,7 @@
                                     <label>@lang('Address')</label>
                                     <input type="text" name="address" class="form-control">
                                 </div>
+
                                 <div class="form-group">
                                     <label>@lang('Location')</label>
                                     <select name="location_id" class="form-control" required>
@@ -145,11 +146,11 @@
                                     <label for="status">Status</label>
                                     <select name="status" id="status" class="form-control" required>
                                         <option value="">@lang('Select Status')</option>
-                                        <option value="1"
-                                            {{ old('status', $clinic->status ?? '') == '1' ? 'selected' : '' }}>Active
+                                        <option value="1" {{ old('status', $clinic->status ?? '') == '1' ? 'selected' : '' }}>
+                                            Active
                                         </option>
-                                        <option value="0"
-                                            {{ old('status', $clinic->status ?? '') == '0' ? 'selected' : '' }}>Inactive
+                                        <option value="0" {{ old('status', $clinic->status ?? '') == '0' ? 'selected' : '' }}>
+                                            Inactive
                                         </option>
                                     </select>
                                 </div>
@@ -164,9 +165,23 @@
                                         step="1">
                                 </div>
                             </div>
+
+                            
+                                <div class="form-group">
+                                    <label>@lang('Heading')</label>
+                                    <input type="text" name="heading" class="form-control">
+                                </div>
+                            
+                            <div class="form-group">
+                                    <label>@lang('Discription')</label>
+                                    <textarea name="discription" class="form-control" rows="4"
+                                    placeholder="Enter here your discription...."></textarea>
+                            </div>
+
                             <div class="form-group">
                                 <label>@lang('Map Location (iframe embed code)')</label>
-                                <textarea name="map_location" class="form-control" rows="4" placeholder="Paste iframe embed code here..."></textarea>
+                                <textarea name="map_location" class="form-control" rows="4"
+                                    placeholder="Paste iframe embed code here..."></textarea>
                             </div>
 
                         </div>
@@ -184,8 +199,7 @@
                                                 <select name="slot_type" id="slot-type" class="form-control select2"
                                                     data-minimum-results-for-search="-1" required>
                                                     <option value="" selected disabled>@lang('Select One')</option>
-                                                    <option value="1" @selected($clinic->slot_type == 1)>@lang('Serial')
-                                                    </option>
+
                                                     <option value="2" @selected($clinic->slot_type == 2)>@lang('Time')
                                                     </option>
                                                 </select>
@@ -199,7 +213,8 @@
                                         <div class="col-md-3 col-lg-6">
                                             <div class="form-group">
                                                 <label>@lang('For How Many Days')
-                                                    <i class="fa fa-info-circle text--primary" title="@lang('This will define that your appointment booking will be taken for the next how many days including today. That means with everyday it will add your given value.')">
+                                                    <i class="fa fa-info-circle text--primary"
+                                                        title="@lang('This will define that your appointment booking will be taken for the next how many days including today. That means with everyday it will add your given value.')">
                                                     </i>
                                                 </label>
                                                 <div class="input-group">
@@ -348,8 +363,7 @@
 
                                             <div class="mt-4">
                                                 @foreach ($clinic->serial_or_slot as $item)
-                                                    <button type="button"
-                                                        class="btn btn--primary mr-2 mb-2">{{ $item }}</button>
+                                                    <button type="button" class="btn btn--primary mr-2 mb-2">{{ $item }}</button>
                                                 @endforeach
                                             </div>
                                         @endif
@@ -359,19 +373,17 @@
 
                                             <div class="mt-4">
                                                 @foreach ($clinic->serial_or_slot1 as $item)
-                                                    <button type="button"
-                                                        class="btn btn--primary mr-2 mb-2">{{ $item }}</button>
+                                                    <button type="button" class="btn btn--primary mr-2 mb-2">{{ $item }}</button>
                                                 @endforeach
                                             </div>
-                                        @endif
+                                        Q @endif
                                         @if ($clinic->slot_type && $clinic->serial_or_slot2)
                                             <hr>
                                             <div>Evening Time Slotes:</div>
 
                                             <div class="mt-4">
                                                 @foreach ($clinic->serial_or_slot2 as $item)
-                                                    <button type="button"
-                                                        class="btn btn--primary mr-2 mb-2">{{ $item }}</button>
+                                                    <button type="button" class="btn btn--primary mr-2 mb-2">{{ $item }}</button>
                                                 @endforeach
                                             </div>
                                         @endif
@@ -387,6 +399,7 @@
                 </form>
             </div>
         </div>
+        410az
     </div>
 @endsection
 
@@ -403,10 +416,10 @@
 @endpush
 @push('script')
     <script>
-        (function($) {
+        (function ($) {
             "use strict";
 
-            $('.editBtn').on('click', function() {
+            $('.editBtn').on('click', function () {
                 var data = $(this).data('resource');
                 console.log(data);
                 var imageUrl = data.photo ?
@@ -418,7 +431,7 @@
                 });
             });
 
-            $('#cuModal').on('hidden.bs.modal', function() {
+            $('#cuModal').on('hidden.bs.modal', function () {
                 $('#cuModal').find('.image-upload-preview').css({
                     'background-image': `url(${placeholderImage})`
                 });
@@ -433,10 +446,10 @@
 
 @push('script')
     <script>
-        (function($) {
+        (function ($) {
             'use strict';
 
-            $('select[name=slot_type]').on('change', function() {
+            $('select[name=slot_type]').on('change', function () {
                 var type = $(this).val();
                 schedule(type);
             })
@@ -466,10 +479,10 @@
         })(jQuery);
     </script>
     <script>
-        (function($) {
+        (function ($) {
             'use strict';
 
-            $('select[name=slot_type]').on('change', function() {
+            $('select[name=slot_type]').on('change', function () {
                 var type = $(this).val();
                 schedule(type);
             })
